@@ -5,7 +5,7 @@ DepCharge is a tool designed to help orchestrate the execution of commands acros
 ## Introduction
 A medium-to-large sized project (especially when using a microservice architecture) will consist of 3 or more separate repositories, and rely on a variety of package managers depending on the various languages chosen for each service. Typically, these repos must be managed, tracked, and released in some semblance of unison so that the dependant service calls can be understood and responded to appropriately.
 
-For small (to single) teams, a single developer will oftne need to propagating and perform the same commands across all relevant services. This is a tedious, manual, and error-prone process that can occur every release.
+For small (to single) teams, a single developer will often need to propagating and perform the same commands across all relevant services. This is a tedious, manual, and error-prone process that can occur every release.
 
 DepCharge is designed to help fix that.
 
@@ -15,7 +15,7 @@ By creating a YAML file that describes all of your project(s) dependencies, you 
 All of the examples here are just that: examples. DepCharge is designed to be as flexible as possible, so if you happen to use tools other than what's listed, they should work as well!
 
 `depcharge --kind=<dependency-kind>
-[--label=<comma-separated,inclusive,ORed,inherited>]
+[--labels=<comma-separated,inclusive,ORed,inherited>]
 [... arbitrary number of additional params to be passed to the <kind> application]`
 
 Perform a git status of all git repos:
@@ -28,7 +28,7 @@ Run an npm install across all NPM projects:
     `depcharge --kind=npm install`
 
 Run a composer update on only API services:
-    `depcharge --kind=composer --label=api update`
+    `depcharge --kind=composer --labels=api update`
 
 And much more!
 
@@ -45,6 +45,7 @@ And much more!
 * Find a way to "stream" output to terminal?
 * Setup sample project for example and test
 * Pipeline
+* Help text
 
 ## Additional Resources
 
