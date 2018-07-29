@@ -36,7 +36,7 @@ dep --kind=npm install
 func main() {
 	// Define, grab, and parse our args.
 	kindPtr := flag.String("kind", "", "Targets specific kinds of dependencies (i.e. git, npm, composer)")
-	labelPtr := flag.String("label", "", "Filters to specific labels.")
+	labelPtr := flag.String("labels", "", "Filters to specific labels.")
 	flag.Parse()
 	action := flag.Args()
 
@@ -173,6 +173,7 @@ func defaultActionHandler(kind string, action []string, deps []Dep){
 func gitActionHandler(kind string, action []string, deps []Dep){
 	for _, dep := range deps {
 		switch action[0] {
+		// TODO: remove this once params are working
 		// need to use "repo" from yaml for clone, this differs per dep.
 		case "clone":
 			fmt.Println("Attempting to clone " + dep.Repo + " to: " + dep.Location)
