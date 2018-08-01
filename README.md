@@ -35,8 +35,6 @@ And much more!
 
 ## ToDo:
 ### Before v1.0
-* Support of templating of arbitrary parameters:
-`depcharge --kind=git --labels=ui clone <url>`
 * Figure out good solution for labels: and vs or exclusivity
 * Setup sample project for example and test
 * Build Pipeline
