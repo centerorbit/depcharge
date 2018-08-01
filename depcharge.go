@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"github.com/ghodss/yaml"
 	"io/ioutil"
-	"gopkg.in/src-d/go-git.v4"
-	"gopkg.in/src-d/go-git.v4/_examples"
-	"os"
+			"os"
 	"flag"
 	"path/filepath"
 		"strings"
 	"time"
+	"github.com/cbroglie/mustache"
 	"os/exec"
 )
 
@@ -18,7 +17,6 @@ type Dep struct {
 	Name     string   `json:"name"`
 	Kind     string   `json:"kind"`
 	Location string   `json:"location"`
-	Repo     string   `json:"repo"`
 	DepList  []Dep    `json:"deps"`
 	Labels	 []string `json:"labels"`
 	Params map[string]string `json:"params"`
@@ -157,6 +155,8 @@ func findActionHandler(kind string) func(string, []string, []Dep){
 	switch kind {
 	case "git":
 		return gitActionHandler
+	case "secret":
+		return secretesActionHandler
 	default:
 		return defaultActionHandler
 	}
@@ -174,18 +174,28 @@ func defaultActionHandler(kind string, action []string, deps []Dep){
 func gitActionHandler(kind string, action []string, deps []Dep){
 	for _, dep := range deps {
 		switch action[0] {
-		// TODO: remove this once params are working
-		// need to use "repo" from yaml for clone, this differs per dep.
-		case "clone":
-			fmt.Println("Attempting to clone " + dep.Repo + " to: " + dep.Location)
+		case "clone": // Clone breaks if the parent dirs aren't already there.
 			there, _ := exists(dep.Location)
-			if there {
-				fmt.Println("Dir exists, fetching instead.")
-				defaultAction(kind, []string{"fetch"}, dep)
-			} else {
-				gitClone(dep.Location, dep.Repo)
+			if !there {
+				// mkdir -p <location>
+				os.MkdirAll(dep.Location, os.ModePerm)
 			}
-		// Right now, everything falls through to default.
+
+			defaultAction(kind, action, dep)
+
+		default:
+			defaultAction(kind, action, dep)
+		}
+	}
+}
+
+
+// TODO: make a special handler for secrets
+func secretesActionHandler(kind string, action []string, deps []Dep){
+	for _, dep := range deps {
+		switch action[0] {
+		//case "get": // Or something along these lines
+			// Right now, everything falls through to default.
 		default:
 			defaultAction(kind, action, dep)
 		}
@@ -195,14 +205,18 @@ func gitActionHandler(kind string, action []string, deps []Dep){
 
 /// *** Actions *** ///
 
-func defaultAction(kind string, action []string, dep Dep) {
-	fmt.Println("Running '", kind, strings.Join(action, " "), "' for: ", dep.Location)
+func defaultAction(kind string, actionParams []string, dep Dep) {
 
-	//for key, value := range(dep.Params) {
-	//	fmt.Println("Key: ", key, " ; Value: ", value)
-	//}
+	// Adding kind, name, and location to possible template params
+	if _, ok := dep.Params["kind"];     !ok { dep.Params["kind"]     = dep.Kind	    }
+	if _, ok := dep.Params["name"];     !ok { dep.Params["name"]     = dep.Name	    }
+	if _, ok := dep.Params["location"]; !ok { dep.Params["location"] = dep.Location	}
 
-	cmd := exec.Command(kind, action...)
+	mustachedActionParams := applyMustache(actionParams, dep.Params)
+
+	fmt.Println("Running '", kind, strings.Join(mustachedActionParams, " "), "' for: ", dep.Location)
+
+	cmd := exec.Command(kind, mustachedActionParams...)
 	cmd.Dir = dep.Location
 	//TODO: Find a way to "stream" output to terminal?
 	out, err := cmd.CombinedOutput() //Combines errors to output
@@ -219,17 +233,15 @@ func defaultAction(kind string, action []string, dep Dep) {
 	}
 }
 
+func applyMustache (actionParams []string, params map[string]string) []string  {
+	var mustachedActionParams []string
 
-func gitClone(path string, url string) {
-	// Clone the given repository to the given directory
-	examples.Info("git clone "+url+" "+path)
+	for _, value := range(actionParams){
+		data, _ := mustache.Render(value, params)
+		mustachedActionParams = append(mustachedActionParams, data)
+	}
 
-	_, err := git.PlainClone(path, false, &git.CloneOptions{
-		URL:      url,
-		Progress: os.Stdout,
-	})
-
-	examples.CheckIfError(err)
+	return mustachedActionParams
 }
 
 
