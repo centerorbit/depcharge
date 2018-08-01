@@ -33,19 +33,25 @@ Run a composer update on only API services:
 And much more!
 
 
-## ToDo
-* Support of arbitrary parameters
-* Test support of YAML anchors
-* Mechanism to perform _other_ types of commands to 'kind's rather than `kind`
-* Support of templating of said parameters
+## ToDo:
+### Before v1.0
+* Support of templating of arbitrary parameters:
 `depcharge --kind=git --labels=ui clone <url>`
-* Need a "literal" flag, to turn off templating?
 * Figure out good solution for labels: and vs or exclusivity
-* Implement channels / goroutines
-* Find a way to "stream" output to terminal?
 * Setup sample project for example and test
-* Pipeline
+* Build Pipeline
 * Help text
+
+### Wish List
+1. Test support of YAML anchors
+1. Secrets managment?
+1. Implement channels / goroutines
+1. Mechanism to perform _other_ types of commands to 'kind's rather than `kind`
+1. Need a "literal" flag, to turn off templating?
+1. Find a way to "stream" output to terminal?
+1. Test Coverage
+1. Better Logging & Verbose flag
+
 
 ## Additional Resources
 

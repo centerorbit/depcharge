@@ -9,9 +9,9 @@ import (
 	"os"
 	"flag"
 	"path/filepath"
-	"os/exec"
-	"strings"
+		"strings"
 	"time"
+	"os/exec"
 )
 
 type Dep struct {
@@ -21,6 +21,7 @@ type Dep struct {
 	Repo     string   `json:"repo"`
 	DepList  []Dep    `json:"deps"`
 	Labels	 []string `json:"labels"`
+	Params map[string]string `json:"params"`
 }
 
 type DepList struct {
@@ -196,6 +197,10 @@ func gitActionHandler(kind string, action []string, deps []Dep){
 
 func defaultAction(kind string, action []string, dep Dep) {
 	fmt.Println("Running '", kind, strings.Join(action, " "), "' for: ", dep.Location)
+
+	//for key, value := range(dep.Params) {
+	//	fmt.Println("Key: ", key, " ; Value: ", value)
+	//}
 
 	cmd := exec.Command(kind, action...)
 	cmd.Dir = dep.Location
