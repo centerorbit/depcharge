@@ -35,14 +35,15 @@ And much more!
 
 ## ToDo:
 ### Before v1.0
-* Figure out good solution for labels: and vs or exclusivity
 * Setup sample project for example and test
 * Build Pipeline
 * Help text
+* Dryrun flag (I think we need a struct for actionHandlers)
 
 ### Wish List
 1. Test support of YAML anchors
 1. Secrets managment?
+1. docker-compose handler
 1. Implement channels / goroutines
 1. Mechanism to perform _other_ types of commands to 'kind's rather than `kind`
 1. Need a "literal" flag, to turn off templating?
