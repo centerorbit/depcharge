@@ -36,8 +36,26 @@ func main() {
 	// Define, grab, and parse our args.
 	kindPtr := flag.String("kind", "", "Targets specific kinds of dependencies (i.e. git, npm, composer)")
 	labelPtr := flag.String("labels", "", "Filters to specific labels.")
+	exclusiveFlag := flag.Bool("exclusive", false, "Applies labels in an exclusive way (default).")
+	inclusiveFlag := flag.Bool("inclusive", false, "Applies labels in an inclusive way.")
+	helpFlag := flag.Bool("help", false, "Prints the help text.")
+
 	flag.Parse()
 	action := flag.Args()
+
+	if *helpFlag {
+		fmt.Println("depcharge")
+		os.Exit(0)
+	}
+
+	if *exclusiveFlag && *inclusiveFlag {
+		fmt.Println("--exclusive and --inclusive cannot be specified at the same time.")
+		os.Exit(-1)
+	}
+
+	exclusive := !*inclusiveFlag
+
+
 
 	// Read in our YAML file.
 	yamlFile, err := ioutil.ReadFile("dep.yml")
@@ -68,7 +86,7 @@ func main() {
 	// Step 3: Filter out via labels, Label filtering is always inclusive.
 	//  If a dep has the label (or its parent had it, hence inherited):
 	//    It wins!
-	labelFiltered := applyFilterLabel(kindFiltered, *labelPtr)
+	labelFiltered := applyFilterLabel(kindFiltered, *labelPtr, exclusive)
 
 	// Debugging, will output JSON of final filtered down deps
 	//dumpStruct(labelFiltered)
@@ -123,7 +141,7 @@ func applyFilterKind(deps []Dep, kind string) []Dep {
 Applies filters
   Splits comma separated
  */
-func applyFilterLabel(deps []Dep, labelString string) []Dep {
+func applyFilterLabel(deps []Dep, labelString string, exclusive bool) []Dep {
 	// If no labels, and onlyo kind, return that.
 	if labelString == "" {
 		fmt.Println("Warning: No labels, using all deps of kind.")
@@ -135,19 +153,52 @@ func applyFilterLabel(deps []Dep, labelString string) []Dep {
 	labels := strings.Split(labelString, ",")
 
 	var foundDeps []Dep
-	for _, dep := range deps {
-		//Filter to || of labels
-		for _, depLabel := range dep.Labels {
-			for _, filterLabel := range labels {
-				if filterLabel == depLabel {
-					fmt.Println("Found a match!", dep)
-					foundDeps = append(foundDeps, dep)
-				}
-			}
+	for _, dep := range deps { // Cycle through all of the deps
+
+		var match bool
+		if exclusive {
+			match = isExclusive(dep.Labels, labels)
+		} else {
+			match = isInclusive(dep.Labels, labels)
+		}
+
+		if match {
+			fmt.Println("Found a match for:", labels, " ; ", dep)
+			foundDeps = append(foundDeps, dep)
 		}
 	}
 
 	return foundDeps
+}
+
+func isExclusive(what []string, against []string) bool {
+	counter := 0
+	for _, item := range what {
+		for _, compare := range against {
+			if item == compare {
+				counter ++
+			}
+		}
+	}
+	if len(against) == counter{
+		return true
+	}
+	return false
+}
+
+func isInclusive(what []string, against []string) bool {
+	match := false
+	InclusiveSearch:
+		for _, item := range what {
+			for _, compare := range against {
+				if item == compare {
+					match = true
+					break InclusiveSearch
+				}
+			}
+		}
+
+	return match
 }
 
 
@@ -208,6 +259,7 @@ func secretesActionHandler(kind string, action []string, deps []Dep){
 func defaultAction(kind string, actionParams []string, dep Dep) {
 
 	// Adding kind, name, and location to possible template params
+	if dep.Params == nil { dep.Params = map[string]string{} }
 	if _, ok := dep.Params["kind"];     !ok { dep.Params["kind"]     = dep.Kind	    }
 	if _, ok := dep.Params["name"];     !ok { dep.Params["name"]     = dep.Name	    }
 	if _, ok := dep.Params["location"]; !ok { dep.Params["location"] = dep.Location	}
@@ -221,6 +273,13 @@ func defaultAction(kind string, actionParams []string, dep Dep) {
 	//TODO: Find a way to "stream" output to terminal?
 	out, err := cmd.CombinedOutput() //Combines errors to output
 	//out, err := cmd.Output() // just stdout
+
+
+	//fmt.Println("Dryrun of:")
+	//fmt.Println(kind, mustachedActionParams)
+	//var err *string = nil
+	//out := ""
+
 
 	if err != nil {
 		fmt.Println("Command finished with error: ", err)
