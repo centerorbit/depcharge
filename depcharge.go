@@ -91,6 +91,7 @@ func main() {
 				"\n" +
 				"Available Options: \n" +
 				" --help		Shows this message \n" +
+				" --dryrun		*NOT YET IMPLEMENTED!* \n" +
 				" --exclusive	(default) For a match to be found, it must contain at least all provided labels \n" +
 				" --inclusive   For a match to be found, it must contain at least one of the provided labels \n" +
 				"\n" +
@@ -124,7 +125,7 @@ func main() {
 	yamlFile, err := ioutil.ReadFile("dep.yml")
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
-		return
+		os.Exit(-1)
 	}
 
 	// Unmarshal the YAML into a struct.
@@ -132,7 +133,7 @@ func main() {
 	err = yaml.Unmarshal(yamlFile, &depList)
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
-		return
+		os.Exit(-1)
 	}
 
 	// Figure out our current directory.

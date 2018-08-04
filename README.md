@@ -17,22 +17,71 @@ By creating a YAML file that describes all of your project(s) dependencies, you 
 ## How it Works & Usage
 All of the examples here are just that: examples. DepCharge is designed to be as flexible as possible, so if you happen to use tools other than what's listed, they should work as well!
 
-`depcharge --kind=<dependency-kind>
-[--labels=<comma-separated,inclusive,ORed,inherited>]
-[... arbitrary number of additional params to be passed to the <kind> application]`
+DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once.
 
-Perform a git status of all git repos:
-    `depcharge --kind=git status`
+Usage: `depcharge --kind=<kind> [--labels=<comma-separated,inherited>] [OPTIONS...] COMMAND [ARGS...]`
 
-Checkout all repos to a new release branch:
-    `depcharge --kind=git checkout -b release`
+Features:
+* Supports arbitrary params, whatever 'params: key: value' pairs you want
+* Built-in mustache templating, allows you to parametrize your commands
 
-Run an npm install across all NPM projects:
-    `depcharge --kind=npm install`
+Description:
+`depcharge` will read the `dep.yml` file in the current working directory, and
+perform all commands relative to that location.
 
-Run a composer update on only API services:
-    `depcharge --kind=composer --labels=api update`
+Example `dep.yml`:
+```
+deps:
+    - name: frontend
+      kind: git
+      location: ./app/frontend
+      labels:
+        - public
+      params:
+        repo: git@example.com:frontend.git
+      deps:
+        - name: vue.js
+          kind: npm
+    - name: backend
+      kind: git
+      location: ./app/backend
+      labels:
+        - api
+      params:
+        repo: git@example.com:backend.git
+      deps:
+        - name: lumen
+          kind: composer
+```
 
+Primary Commands:
+ --kind		Is the top-level filter that's applied, opperations are run based on 'kind'
+ --labels	Comma separated list of labels to filter by, inherited from parents
+
+Available Options:
+ --help			Shows this message
+ --dryrun		*NOT YET IMPLEMENTED!*
+ --exclusive	(default) For a match to be found, it must contain at least all provided labels
+ --inclusive   	For a match to be found, it must contain at least one of the provided labels
+
+Example commands:
+
+Will run `git clone <location>` across all git dependencies:
+
+	depcharge --kind=git clone {{location}}
+	
+Will run `git status` across all git dependencies:
+
+	depcharge --kind=git status
+	
+Will run `npm install` across any npm dependencies that have the label 'public':
+
+	depcharge --kind=npm --labels=public install
+	
+Will run `composer install` across any composer dependencies that have either the label 'api', or 'soap':
+
+	depcharge --kind=composer --inclusive --labels=api,soap install
+	
 And much more!
 
 
@@ -45,14 +94,14 @@ And much more!
 
 ### Wish List
 1. Test support of YAML anchors
-1. Secrets managment?
-1. docker-compose handler
-1. Implement channels / goroutines
-1. Mechanism to perform _other_ types of commands to 'kind's rather than `kind`
-1. Need a "literal" flag, to turn off templating?
-1. Find a way to "stream" output to terminal?
-1. Test Coverage
-1. Better Logging & Verbose flag
+2. Secrets managment?
+3. docker-compose handler
+4. Implement channels / goroutines
+5. Mechanism to perform _other_ types of commands to 'kind's rather than `kind`
+6. Need a "literal" flag, to turn off templating?
+7. Find a way to "stream" output to terminal?
+8. Test Coverage
+9. Better Logging & Verbose flag
 
 
 ## Additional Resources
