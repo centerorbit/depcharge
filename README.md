@@ -2,6 +2,9 @@
 
 DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once.
 
+* [GitHub is the public-access repository](https://github.com/centerorbit/depcharge)
+* [GitLab is where development & pipelines occur](https://gitlab.com/centerorbit/depcharge)
+
 ## Introduction
 A medium-to-large sized project (especially when using a microservice architecture) will consist of 3 or more separate repositories, and rely on a variety of package managers depending on the various languages chosen for each service. Typically, these repos must be managed, tracked, and released in some semblance of unison so that the dependant service calls can be understood and responded to appropriately.
 
