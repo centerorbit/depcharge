@@ -54,6 +54,7 @@ func main() {
 				"\n" +
 				"* Supports arbitrary params, whatever 'params: key: value' pairs you want \n" +
 				"* Built-in mustache templating, allows you to parametrize your commands \n" +
+				"* Supports YAML anchors \n" +
 				"\n" +
 				"Description:" +
 				"\n" +
@@ -338,7 +339,7 @@ func defaultAction(kind string, actionParams []string, dep Dep) {
 	out, err := cmd.CombinedOutput() //Combines errors to output
 	//out, err := cmd.Output() // just stdout
 
-
+	
 	//fmt.Println("Dryrun of:")
 	//fmt.Println(kind, mustachedActionParams)
 	//var err *string = nil

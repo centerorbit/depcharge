@@ -24,6 +24,7 @@ Usage: `depcharge --kind=<kind> [--labels=<comma-separated,inherited>] [OPTIONS.
 ### Features:
 * Supports arbitrary params, whatever 'params: key: value' pairs you want
 * Built-in mustache templating, allows you to parametrize your commands
+* Supports YAML anchors
 
 ### Description:
 `depcharge` will read the `dep.yml` file in the current working directory, and
@@ -110,29 +111,7 @@ And much more!
 
 
 ## Additional Resources
-
-
-
-## User Stories
-
-As a developer, I want to describe all of the dependencies in my project, so that they are all accounted for so that I don't need to manually hunt down all of the repos
-* Describes a config file, dep.yaml
-
-As a developer, I want to initiate/bootstrap my environment easily, so that I don't need to clone and setup each project/repo
-* Describes the initial `clone` of all, along with potentially a `npm install` and/or `composer install` where neccessary
-
-As a developer, I want to orchestrate actions across a subset of relevant repos so that a coordinated release can be prepared for multiple services.
-* Describes a method to filter dependencies
-
-As a developer, I want to define a pattern for subsets of projects to follow so that I can issue commands that act on all at once.
-* This describes the the shortcoming of git submodules, you can't easily perform opperations on just a few.
-
-As a developer, I want to allow fellow developers to also work within my project subset easily so that we don't need to recreate my setup everytime a new developer steps in.
-* (Trying to describe some form of lock file)
-* Lock files would cause so many merge conflicts if you wanted each branch to have it's own lock that tracked that branch
-  * Built-in variables could fix a majority of this
-  * Instead of saying something like `- branch: develop`, you could say something like `- branch: $BRANCH` which will look for the active branch, and use that.
-     * This implies a parent concept, though. But the dep.yaml has to live somewhere.
+* https://www.atlassian.com/blog/git/alternatives-to-git-submodule-git-subtree
 
 
 
