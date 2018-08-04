@@ -21,15 +21,15 @@ DepCharge is a tool designed to help orchestrate the execution of commands acros
 
 Usage: `depcharge --kind=<kind> [--labels=<comma-separated,inherited>] [OPTIONS...] COMMAND [ARGS...]`
 
-Features:
+### Features:
 * Supports arbitrary params, whatever 'params: key: value' pairs you want
 * Built-in mustache templating, allows you to parametrize your commands
 
-Description:
+### Description:
 `depcharge` will read the `dep.yml` file in the current working directory, and
 perform all commands relative to that location.
 
-Example `dep.yml`:
+### Example `dep.yml`:
 ```
 deps:
     - name: frontend
@@ -54,17 +54,23 @@ deps:
           kind: composer
 ```
 
-Primary Commands:
+### Primary Commands:
+
  --kind		Is the top-level filter that's applied, opperations are run based on 'kind'
+
  --labels	Comma separated list of labels to filter by, inherited from parents
 
-Available Options:
+### Available Options:
+
  --help			Shows this message
+
  --dryrun		*NOT YET IMPLEMENTED!*
+
  --exclusive	(default) For a match to be found, it must contain at least all provided labels
+
  --inclusive   	For a match to be found, it must contain at least one of the provided labels
 
-Example commands:
+### Example commands:
 
 Will run `git clone <location>` across all git dependencies:
 
@@ -89,7 +95,6 @@ And much more!
 ### Before v1.0
 * Setup sample project for example and test
 * Build Pipeline
-* Help text
 * Dryrun flag (I think we need a struct for actionHandlers)
 
 ### Wish List
