@@ -65,7 +65,7 @@ deps:
 
  --help			Shows this message
 
- --dryrun		*NOT YET IMPLEMENTED!*
+ --dryrun		Prints out intended command without executing it
 
  --exclusive	(default) For a match to be found, it must contain at least all provided labels
 
