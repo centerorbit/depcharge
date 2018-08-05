@@ -1,0 +1,27 @@
+deps:
+- name: depcharge
+  kind: project
+  location: ./
+  deps:
+    - name: gitlab
+      kind: git
+      location:
+      params:
+        repo: git@gitlab.com:centerorbit/depcharge.git
+    - name: github
+      kind: git
+      location:
+      params:
+        repo: git@github.com:centerorbit/depcharge.git
+    - name: yaml-parser
+      kind: go
+      params:
+        get: github.com/ghodss/yaml
+    - name: mustache
+      kind: go
+      params:
+        get: github.com/cbroglie/mustache/...
+    - name: assertions
+      kind: go
+      params:
+        get: github.com/stretchr/testify
