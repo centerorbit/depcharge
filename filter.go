@@ -47,11 +47,13 @@ func applyFilterKind(deps []Dep, kind string) []Dep {
 	Splits comma separated
  */
 func applyFilterLabel(deps []Dep, perform Perform) []Dep {
-	// If no labels, and onlyo kind, return that.
 	if perform.Labels == "" {
 		fmt.Println("Warning: No labels, using all deps of kind.")
-		fmt.Println("Press Ctrl+c to cancel...")
-		time.Sleep(5 * time.Second)
+		if ! perform.Force {
+			fmt.Println("Press Ctrl+c to cancel...")
+			time.Sleep(5 * time.Second)
+		}
+		// If no labels, and only kind, return that.
 		return deps
 	}
 
@@ -68,7 +70,6 @@ func applyFilterLabel(deps []Dep, perform Perform) []Dep {
 		}
 
 		if match {
-			fmt.Println("Found a match for:", labels, " ; ", dep)
 			foundDeps = append(foundDeps, dep)
 		}
 	}

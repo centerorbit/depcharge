@@ -25,6 +25,7 @@ type Perform struct {
 	Action []string
 	Exclusive bool
 	DryRun bool
+	Force bool
 }
 
 

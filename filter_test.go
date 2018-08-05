@@ -76,3 +76,80 @@ func TestUnwrap(t *testing.T) {
 	assert.Equal(t,[]string{"first"}, foundDeps[2].Labels)
 	assert.Equal(t,[]string{"second", "first"}, foundDeps[1].Labels)
 }
+
+func TestApplyFilterKind(t *testing.T) {
+	testDeps := []Dep{
+		Dep{
+			Labels: nil,
+		},
+		Dep{
+			Labels: []string{"one"},
+		},
+		Dep{
+			Labels: []string{"one", "two"},
+		},
+		Dep{
+			Labels: []string{"three", "two"},
+		},
+	}
+
+	perform := Perform{
+		Labels: "",
+		Exclusive: false,
+		Force: true,
+	}
+
+	result := applyFilterLabel(testDeps, perform)
+	assert.Equal(t, 4, len(result))
+
+	perform.Labels = "one"
+	perform.Exclusive = true
+	result = applyFilterLabel(testDeps, perform)
+	assert.Equal(t, 2, len(result))
+
+	perform.Exclusive = false
+	result = applyFilterLabel(testDeps, perform)
+	assert.Equal(t, 2, len(result))
+
+	perform.Labels = "one,two"
+	perform.Exclusive = true
+	result = applyFilterLabel(testDeps, perform)
+	assert.Equal(t, 1, len(result))
+
+	perform.Labels = "two,one"
+	perform.Exclusive = false
+	result = applyFilterLabel(testDeps, perform)
+	assert.Equal(t, 3, len(result))
+
+	perform.Labels = "zero"
+	perform.Exclusive = false
+	result = applyFilterLabel(testDeps, perform)
+	assert.Equal(t, 0, len(result))
+}
+
+
+func TestApplyFilterLabel(t *testing.T) {
+	testDeps := []Dep{
+		Dep{
+			Kind: "git",
+		},
+		Dep{
+			Kind: "git",
+		},
+		Dep{
+			Kind: "git",
+		},
+		Dep{
+			Kind: "other",
+		},
+	}
+
+	result := applyFilterKind(testDeps, "git")
+	assert.Equal(t, 3, len(result))
+
+	result = applyFilterKind(testDeps, "other")
+	assert.Equal(t, 1, len(result))
+
+	result = applyFilterKind(testDeps, "none")
+	assert.Equal(t, 0, len(result))
+}
