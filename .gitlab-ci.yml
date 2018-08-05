@@ -10,8 +10,11 @@ init:
   script:
   - export GOPATH=$(pwd)
   - apk update && apk add git
-  - go get github.com/ghodss/yaml github.com/cbroglie/mustache/... github.com/stretchr/testify
+  - go get github.com/ghodss/yaml
+  - go get github.com/cbroglie/mustache/...
+  - go get github.com/stretchr/testify
   artifacts:
+    expire_in: 10 minutes
     paths:
     - bin/
     - pkg/
