@@ -96,7 +96,6 @@ And much more!
 ### Before v1.0
 * Setup sample project for example and test
 * Build Pipeline
-* Dryrun flag (I think we need a struct for actionHandlers)
 
 ### Wish List
 1. Test support of YAML anchors
