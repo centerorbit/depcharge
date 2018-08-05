@@ -2,9 +2,6 @@
 
 DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once.
 
-* [GitHub is the public-access repository](https://github.com/centerorbit/depcharge)
-* [GitLab is where development & pipelines occur](https://gitlab.com/centerorbit/depcharge)
-
 ## Introduction
 A medium-to-large sized project (especially when using a microservice architecture) will consist of 3 or more separate repositories, and rely on a variety of package managers depending on the various languages chosen for each service. Typically, these repos must be managed, tracked, and released in some semblance of unison so that the dependant service calls can be understood and responded to appropriately.
 
@@ -92,26 +89,12 @@ Will run `composer install` across any composer dependencies that have either th
 And much more!
 
 
-## ToDo:
-### Before v1.0
-* Setup sample project for example and test
-* Build Pipeline
-
-### Wish List
-1. Test support of YAML anchors
-2. Secrets managment?
-3. docker-compose handler
-4. Implement channels / goroutines
-5. Mechanism to perform _other_ types of commands to 'kind's rather than `kind`
-6. Need a "literal" flag, to turn off templating?
-7. Find a way to "stream" output to terminal?
-8. Test Coverage
-9. Better Logging & Verbose flag
-
-
 ## Additional Resources
-* https://www.atlassian.com/blog/git/alternatives-to-git-submodule-git-subtree
+* https://mustache.github.io/
 
+## Contributing
+* [GitLab is where development & pipelines occur](https://gitlab.com/centerorbit/depcharge)
+* [GitHub is the public-access repository](https://github.com/centerorbit/depcharge)
 
 
 ## License
