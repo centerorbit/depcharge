@@ -1,4 +1,5 @@
 # DepCharge
+[![pipeline status](https://gitlab.com/centerorbit/depcharge/badges/master/pipeline.svg)](https://gitlab.com/centerorbit/depcharge/commits/master) [![coverage report](https://gitlab.com/centerorbit/depcharge/badges/master/coverage.svg)](https://gitlab.com/centerorbit/depcharge/commits/master)
 
 DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once.
 
