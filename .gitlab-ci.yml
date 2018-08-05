@@ -13,6 +13,7 @@ init:
   - go get github.com/ghodss/yaml
   - go get github.com/cbroglie/mustache/...
   - go get github.com/stretchr/testify
+  - go get github.com/mattn/goveralls
   artifacts:
     expire_in: 10 minutes
     paths:
@@ -29,6 +30,7 @@ test:
   script:
   - export GOPATH=$(pwd)
   - go test -cover
+  - goveralls -repotoken $COVERALLS_TOKEN
 
 
 build:
