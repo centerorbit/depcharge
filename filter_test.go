@@ -2,8 +2,8 @@ package main
 
 import (
 	"testing"
-	"depcharge/src/github.com/stretchr/testify/assert"
-		"path/filepath"
+	"github.com/stretchr/testify/assert"
+	"path/filepath"
 	)
 
 func TestUnwrap(t *testing.T) {
