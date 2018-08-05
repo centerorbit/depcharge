@@ -153,3 +153,55 @@ func TestApplyFilterLabel(t *testing.T) {
 	result = applyFilterKind(testDeps, "none")
 	assert.Equal(t, 0, len(result))
 }
+
+func TestIsExclusive(t *testing.T) {
+	what := []string{"one", "two"} // dep.labels
+	against := []string{"one"} // labels
+
+	// Dep does have "one"
+	assert.True(t, isExclusive(what, against))
+
+	// Dep does not have "three"
+	against = []string{"one", "three"} // labels
+	assert.False(t, isExclusive(what, against))
+
+	// Testing no labels, no filter, all comes back
+	against = []string{} // labels
+	assert.True(t, isExclusive(what, against))
+
+	// Testing no dep.labels, and no labels
+	what = []string{} // dep.labels
+	assert.True(t, isExclusive(what, against))
+
+	// Testing no dep.labels, but with labels
+	against = []string{"one", "three"} // labels
+	assert.False(t, isExclusive(what, against))
+}
+
+func TestIsInclusive(t *testing.T) {
+	what := []string{"one", "two"} // dep.labels
+	against := []string{"one"} // labels
+
+	// Dep does have "one"
+	assert.True(t, isInclusive(what, against))
+
+	// Dep does not have "three", but does have "one"
+	against = []string{"one", "three"} // labels
+	assert.True(t, isInclusive(what, against))
+
+	// Dep does not have "four"
+	against = []string{"four"} // labels
+	assert.False(t, isInclusive(what, against))
+
+	// Testing no labels, no filter, all comes back
+	against = []string{} // labels
+	assert.True(t, isInclusive(what, against))
+
+	// Testing no dep.labels, and no labels
+	what = []string{} // dep.labels
+	assert.True(t, isInclusive(what, against))
+
+	// Testing no dep.labels, but with labels
+	against = []string{"one", "three"} // labels
+	assert.False(t, isInclusive(what, against))
+}

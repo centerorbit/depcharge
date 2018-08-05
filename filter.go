@@ -93,6 +93,10 @@ func isExclusive(what []string, against []string) bool {
 }
 
 func isInclusive(what []string, against []string) bool {
+	if (len(what) == 0 && len(against) == 0) || len(against) == 0 {
+		return true
+	}
+
 	match := false
 InclusiveSearch:
 	for _, item := range what {
