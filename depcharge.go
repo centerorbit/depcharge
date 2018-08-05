@@ -58,7 +58,14 @@ func main() {
 
 	// Finally, call the handler which will find and execute the kind+action
 	//  across all final deps.
-	handler(labelFiltered, perform)
+	complete := make(chan bool)
+
+	n := handler(complete, labelFiltered, perform)
+
+	for i := 0; i < n; i++ {
+		<-complete
+	}
+	fmt.Println("depcharge complete!")
 }
 
 /// ***  Helpers *** ///
