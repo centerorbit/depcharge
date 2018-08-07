@@ -54,6 +54,9 @@ func dockerComposeHandler(complete chan<- bool, deps []Dep, perform Perform) int
 	//	fmt.Println(string(out))
 	//}
 
+	// If this line is uncommented, go dies from deadlock... why?
+	//complete <- true
+
 	return 0
 }
 
