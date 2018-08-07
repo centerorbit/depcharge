@@ -32,20 +32,21 @@ func defaultActionHandler(complete chan<- bool, deps []Dep, perform Perform) int
 }
 
 func dockerComposeHandler(complete chan<- bool, deps []Dep, perform Perform) int {
-	fmt.Println("Called dockerComposeHandler")
-	override := ""
+	var override []string
+	var action []string
 
-	action := perform.Action[0]
+	action = append(action, perform.Action[0])
+	//Trim off the first action, so that it doesn't get loop-added by the deps
 	perform.Action = perform.Action[1:]
 
 	for _, dep := range deps {
-		override += " -f " + filepath.Clean(prepDockerComposeAction(dep, perform))
+		override = append(override,"-f", filepath.Clean(prepDockerComposeAction(dep, perform)))
 	}
 
-	//go dockerComposeAction(complete, perform, override)
-	dockerComposeAction(complete, perform, action, override)
+	action = append(override, action...)
+	go dockerComposeAction(complete, perform, action)
 
-	return 0
+	return 1
 }
 
 func gitActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {

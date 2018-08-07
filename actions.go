@@ -36,18 +36,18 @@ func prepDockerComposeAction( dep Dep, perform Perform) string {
 	return strings.Join(mustachedActionParams, " ")
 }
 
-func dockerComposeAction(complete chan<- bool, perform Perform, action string, override string)  {
+func dockerComposeAction(complete chan<- bool, perform Perform, action []string)  {
 	if perform.DryRun {
 		fmt.Println("Dry run of: ")
-		fmt.Println(perform.Kind, override, action)
+		fmt.Println(perform.Kind, action)
 	} else {
-		cmd := exec.Command(perform.Kind, override, action)
+		cmd := exec.Command(perform.Kind, action...)
 		//TODO: Find a way to "stream" output to terminal?
 		//TODO: move checkOkay to better helpers location
 		checkOkay(cmd.CombinedOutput()) //Combines errors to output
 	}
 
-	//complete <- true
+	complete <- true
 }
 
 /// ***  Helpers *** ///
