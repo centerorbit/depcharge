@@ -4,7 +4,8 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"os"
-	)
+	"flag"
+)
 
 /**
 This will load the dep.yml file of depcharge
@@ -29,4 +30,5 @@ func TestProcessArgs(t *testing.T) {
 	assert.False(t,  results.Exclusive)
 
 	os.Args = oldArgs
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 }
