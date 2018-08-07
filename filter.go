@@ -3,9 +3,29 @@ package main
 import (
 	"path/filepath"
 	"fmt"
+		"strings"
 	"time"
-	"strings"
 )
+
+
+func flatten(deps []Dep) []Dep {
+	for key, dep := range deps {
+
+		if dep.DepList != nil {
+			dep.DepList = flatten(dep.DepList)
+		}
+
+		for _, mdep := range dep.MergeDeps {
+			dep.DepList = append(dep.DepList, flatten(mdep)...)
+		}
+		dep.MergeDeps = nil
+
+		deps[key] = dep
+	}
+
+	return deps
+}
+
 
 /**
 Flattens the Dep YAML

@@ -73,7 +73,7 @@ deps:
 
 Will run `git clone <location>` across all git dependencies:
 
-	depcharge --kind=git clone {{location}}
+	depcharge --kind=git clone {{repo}} {{location}}
 	
 Will run `git status` across all git dependencies:
 
