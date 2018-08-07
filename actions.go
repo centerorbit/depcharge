@@ -4,6 +4,7 @@ import (
 		"github.com/cbroglie/mustache"
 		"os/exec"
 	"fmt"
+	"strings"
 )
 
 /// *** Actions *** ///
@@ -13,8 +14,6 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 	mustachedActionParams := templateParams(dep, perform)
 
 	fmt.Println("Running '", perform.Kind, mustachedActionParams, " for: ", dep.Location)
-	var err error = nil
-	var out []byte = nil
 
 	if perform.DryRun {
 		fmt.Println("Dry run of: ")
@@ -23,11 +22,37 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 		cmd := exec.Command(perform.Kind, mustachedActionParams...)
 		cmd.Dir = dep.Location
 		//TODO: Find a way to "stream" output to terminal?
-		out, err = cmd.CombinedOutput() //Combines errors to output
+		checkOkay(cmd.CombinedOutput()) //Combines errors to output
 		//out, err := cmd.Output() // just stdout
 	}
 
+	complete <- true
+}
 
+func prepDockerComposeAction( dep Dep, perform Perform) string {
+
+	mustachedActionParams := templateParams(dep, perform)
+
+	return strings.Join(mustachedActionParams, " ")
+}
+
+func dockerComposeAction(complete chan<- bool, perform Perform, action string, override string)  {
+	if perform.DryRun {
+		fmt.Println("Dry run of: ")
+		fmt.Println(perform.Kind, override, action)
+	} else {
+		cmd := exec.Command(perform.Kind, override, action)
+		//TODO: Find a way to "stream" output to terminal?
+		//TODO: move checkOkay to better helpers location
+		checkOkay(cmd.CombinedOutput()) //Combines errors to output
+	}
+
+	//complete <- true
+}
+
+/// ***  Helpers *** ///
+
+func checkOkay(out []byte, err error)  {
 	if err != nil {
 		fmt.Println("Command finished with error: ", err)
 	}
@@ -37,11 +62,7 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 	} else {
 		fmt.Println(string(out))
 	}
-
-	complete <- true
 }
-
-/// ***  Helpers *** ///
 
 func templateParams(dep Dep, perform Perform) []string  {
 	// Adding kind, name, and location to possible template params
