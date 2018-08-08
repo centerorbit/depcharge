@@ -10,6 +10,7 @@ type Dep struct {
 	Name     string   `json:"name"`
 	Kind     string   `json:"kind"`
 	Location string   `json:"location"`
+	MergeDeps [][]Dep `json:"merge-deps"`
 	DepList  []Dep    `json:"deps"`
 	Labels	 []string `json:"labels"`
 	Params map[string]string `json:"params"`
@@ -39,8 +40,14 @@ func main() {
 	// ABS, and Clean strip trailing slash, we need to consistently re-add it for concating to work
 	cwd += "/"
 
+	// Step 0: Flatten merge-deps with deps. Because YAML doesn't support merging sequences:
+	//  http://yaml4r.sourceforge.net/doc/page/collections_in_yaml.htm
+	// 	https://stackoverflow.com/a/30770740/663058
+	flattened := flatten(depList.Deps)
+	//dumpStruct(flattened)
+
 	// Step 1: We must flatten our YAML Struct, expanding location, and inheriting labels
-	expanded := unwrap(depList.Deps, cwd, nil)
+	expanded := unwrap(flattened, cwd, nil)
 
 	// Step 2: Now, lets filter out to only the kind that we want
 	kindFiltered := applyFilterKind(expanded, perform.Kind)
@@ -51,7 +58,6 @@ func main() {
 	labelFiltered := applyFilterLabel(kindFiltered, perform)
 
 	// Debugging, will output JSON of final filtered down deps
-	//dumpStruct(labelFiltered)
 
 	// We select a handler based on our kind
 	handler := findActionHandler(perform.Kind)

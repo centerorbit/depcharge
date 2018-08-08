@@ -3,9 +3,38 @@ package main
 import (
 	"path/filepath"
 	"fmt"
+		"strings"
 	"time"
-	"strings"
 )
+
+/**
+Flattens MergeDeps into a single-level array, and appends that onto DepList
+This is due to YAML limitations:
+	// Step 0: Flatten merge-deps with deps. Because YAML doesn't support merging sequences:
+	//  http://yaml4r.sourceforge.net/doc/page/collections_in_yaml.htm
+	// 	https://stackoverflow.com/a/30770740/663058
+ */
+func flatten(deps []Dep) []Dep {
+	//Go through all of the deps, and check if they need flattening.
+	for key, dep := range deps {
+
+		//Cycle through the arrays of arrays of deps
+		for _, mdep := range dep.MergeDeps {
+			// and spread/merge those into the deps.
+			dep.DepList = append(dep.DepList, flatten(mdep)...)
+		}
+		dep.MergeDeps = nil
+
+		// The recursive part of this function
+		// Called after the MergeDeps, in case the anchored deps have deps
+		dep.DepList = flatten(dep.DepList)
+
+		deps[key] = dep
+	}
+
+	return deps
+}
+
 
 /**
 Flattens the Dep YAML
