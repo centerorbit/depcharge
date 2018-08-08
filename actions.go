@@ -43,7 +43,6 @@ func dockerComposeAction(complete chan<- bool, perform Perform, action []string)
 	} else {
 		cmd := exec.Command(perform.Kind, action...)
 		//TODO: Find a way to "stream" output to terminal?
-		//TODO: move checkOkay to better helpers location
 		checkOkay(cmd.CombinedOutput()) //Combines errors to output
 	}
 

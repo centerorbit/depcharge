@@ -35,17 +35,21 @@ func dockerComposeHandler(complete chan<- bool, deps []Dep, perform Perform) int
 	var override []string
 	var action []string
 
+	// First, pull out the action (ie up, or build)
 	action = append(action, perform.Action[0])
 	//Trim off the first action, so that it doesn't get loop-added by the deps
 	perform.Action = perform.Action[1:]
 
+	// Cycle through all deps, and build out an array of override yml files
 	for _, dep := range deps {
 		override = append(override,"-f", filepath.Clean(prepDockerComposeAction(dep, perform)))
 	}
 
+	// Append on the action and override, this is tacked onto the end, as per how docker-compose functions
 	action = append(override, action...)
 	go dockerComposeAction(complete, perform, action)
 
+	// Return 1, because we only are doing 1 go routine
 	return 1
 }
 
