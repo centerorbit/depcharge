@@ -28,7 +28,7 @@ func processArgs() Perform {
 			"\n" +
 				"DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once." +
 				"\n\n" +
-				"Usage: depcharge --kind=<kind> [--labels=<comma-separated,inherited>] [OPTIONS...] COMMAND [ARGS...]" +
+				"Usage: depcharge [--kind=<kind>] [--labels=<comma-separated,inherited>] [OPTIONS...] [COMMAND/ARGS...]" +
 				"\n\n" +
 				"Features:" +
 				"\n" +
@@ -68,6 +68,7 @@ func processArgs() Perform {
 				"\n\n" +
 				"Primary Commands: \n" +
 				" --kind		Is the top-level filter that's applied, opperations are run based on 'kind' \n" +
+				"                   if --kind is not specified, then the first COMMAND/ARG is used" +
 				" --labels		Comma separated list of labels to filter by, inherited from parents \n" +
 				"\n" +
 				"Available Options: \n" +
@@ -100,9 +101,18 @@ func processArgs() Perform {
 
 	exclusive := !*inclusiveFlag
 
-	perform.Kind = *kindPtr
+	if *kindPtr == "" && len(action) >= 1 {
+		// First, grab the action (ie up, or build)
+		perform.Kind = action[0]
+		//Trim off the first action, so that it doesn't get loop-added by the deps
+		perform.Action = action[1:]
+	} else {
+		perform.Kind = *kindPtr
+		perform.Action = action
+	}
+
+
 	perform.Labels = *labelPtr
-	perform.Action = action
 	perform.Exclusive = exclusive
 	perform.DryRun = *dryRunFlag
 
