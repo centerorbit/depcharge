@@ -14,6 +14,7 @@ func processArgs() Perform {
 
 	// Define, grab, and parse our args.
 	kindPtr := flag.String("kind", "", "Targets specific kinds of dependencies (i.e. git, npm, composer)")
+	insteadPtr := flag.String("instead", "", "Instead of 'kind', perform a different command.")
 	labelPtr := flag.String("labels", "", "Filters to specific labels.")
 	exclusiveFlag := flag.Bool("exclusive", false, "Applies labels in an exclusive way (default).")
 	inclusiveFlag := flag.Bool("inclusive", false, "Applies labels in an inclusive way.")
@@ -28,7 +29,7 @@ func processArgs() Perform {
 			"\n" +
 				"DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once." +
 				"\n\n" +
-				"Usage: depcharge [--kind=<kind>] [--labels=<comma-separated,inherited>] [OPTIONS...] [COMMAND/ARGS...]" +
+				"Usage: depcharge [--kind=<kind>] [--instead=<action>] [--labels=<comma-separated,inherited>] [OPTIONS...] [COMMAND/ARGS...]" +
 				"\n\n" +
 				"Features:" +
 				"\n" +
@@ -69,6 +70,7 @@ func processArgs() Perform {
 				"Primary Commands: \n" +
 				" --kind		Is the top-level filter that's applied, opperations are run based on 'kind' \n" +
 				"                   if --kind is not specified, then the first COMMAND/ARG is used" +
+				" --instead		Is used to specify a command you'd like to run against --kind, but is not 'kind'." +
 				" --labels		Comma separated list of labels to filter by, inherited from parents \n" +
 				"\n" +
 				"Available Options: \n" +
@@ -112,6 +114,7 @@ func processArgs() Perform {
 	}
 
 
+	perform.Instead = *insteadPtr
 	perform.Labels = *labelPtr
 	perform.Exclusive = exclusive
 	perform.DryRun = *dryRunFlag

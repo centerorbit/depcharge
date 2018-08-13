@@ -24,7 +24,7 @@ All of the examples here are just that: examples. DepCharge is designed to be as
 
 DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once.
 
-Usage: `depcharge [--kind=<kind>] [--labels=<comma-separated,inherited>] [OPTIONS...] COMMAND [ARGS...]`
+Usage: `depcharge [--kind=<kind>] [--instead=<action>] [--labels=<comma-separated,inherited>] [OPTIONS...] COMMAND [ARGS...]`
 
 ### Features:
 * Supports arbitrary params, whatever 'params: key: value' pairs you want
@@ -64,7 +64,7 @@ deps:
 ### Primary Commands:
 
  --kind		Is the top-level filter that's applied, opperations are run based on 'kind'. If --kind is not specified, then the first COMMAND/ARG is used
-
+ --instead  Is used to specify a command you'd like to run against --kind, but is not 'kind'.
  --labels	Comma separated list of labels to filter by, inherited from parents
 
 ### Available Options:
