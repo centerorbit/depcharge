@@ -22,6 +22,7 @@ type DepList struct {
 
 type Perform struct {
 	Kind string
+	Instead string
 	Labels string
 	Action []string
 	Exclusive bool
@@ -57,10 +58,14 @@ func main() {
 	//    It wins!
 	labelFiltered := applyFilterLabel(kindFiltered, perform)
 
-	// Debugging, will output JSON of final filtered down deps
+	// If '--instead' is provided, swap it out for Kind, _after_ filtering has been done
+	if perform.Instead != "" {
+		perform.Kind = perform.Instead;
+	}
 
 	// We select a handler based on our kind
 	handler := findActionHandler(perform.Kind)
+
 
 	// Finally, call the handler which will find and execute the kind+action
 	//  across all final deps.
