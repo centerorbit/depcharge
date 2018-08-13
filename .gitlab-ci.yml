@@ -4,14 +4,21 @@ stages:
 - init
 - test
 - build
+- release
 
 init:
   stage: init
+  cache:
+    paths:
+    - bin/
+    - pkg/
+    - src/
   script:
+  - mkdir -p bin
   - export GOPATH=$(pwd)
+  - export GOBIN=$GOPATH/bin
   - apk update && apk add git
-  - go get github.com/ghodss/yaml
-  - go get github.com/cbroglie/mustache/...
+  - go get ./...
   - go get github.com/stretchr/testify
   artifacts:
     expire_in: 10 minutes
@@ -39,6 +46,7 @@ build:
   - export GOPATH=$(pwd)
   - go build .
   artifacts:
+    expire_in: 1 week
     paths:
       - depcharge
 
@@ -56,5 +64,25 @@ build-docker:
   - docker run $CI_REGISTRY_IMAGE:latest
 
   - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+  - master
+
+release:
+  image: registry.gitlab.com/centerorbit/release-github
+  stage: release
+  dependencies:
+  - build
+  variables:
+    GIT_STRATEGY: none
+    OWNER: "centerorbit"
+    REPO: "depcharge"
+    TAG: $CI_COMMIT_SHA
+    RELEASE_NAME: "linux-x64"
+    ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
+    PRE_RELEASE: "true"
+  script:
+  - zip -m $RELEASE_NAME.zip depcharge
+  - export TAG=$(echo $TAG| cut -c1-7)
+  - php /var/code/release.php
   only:
   - master
