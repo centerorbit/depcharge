@@ -13,12 +13,11 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 
 	mustachedActionParams := templateParams(dep, perform)
 
-	fmt.Println("Running '", perform.Kind, mustachedActionParams, " for: ", dep.Location)
-
 	if perform.DryRun {
-		fmt.Println("Dry run of: ")
-		fmt.Println(perform.Kind, " ", mustachedActionParams)
+		fmt.Println("Dry run of: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
 	} else {
+		fmt.Println("Running: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
+
 		cmd := exec.Command(perform.Kind, mustachedActionParams...)
 		cmd.Dir = dep.Location
 		//TODO: Find a way to "stream" output to terminal?
@@ -85,9 +84,15 @@ func templateParams(dep Dep, perform Perform) []string {
 
 func applyMustache(params map[string]string, actionParams []string) []string {
 	var mustachedActionParams []string
+	mustache.AllowMissingVariables = false
 
 	for _, value := range actionParams {
-		data, _ := mustache.Render(value, params)
+		data, err := mustache.Render(value, params)
+
+		if err != nil {
+			fmt.Println("Warning: ", err)
+		}
+
 		mustachedActionParams = append(mustachedActionParams, data)
 	}
 
