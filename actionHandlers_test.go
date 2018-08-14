@@ -1,9 +1,9 @@
 package main
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
 	"reflect"
+	"testing"
 )
 
 func TestFindActionHandler(t *testing.T) {
@@ -19,6 +19,6 @@ func TestFindActionHandler(t *testing.T) {
 
 func functionEqual(t *testing.T,
 	expected func(chan<- bool, []Dep, Perform) int,
-	actual func(chan<- bool, []Dep, Perform) int){
+	actual func(chan<- bool, []Dep, Perform) int) {
 	assert.Equal(t, reflect.ValueOf(expected), reflect.ValueOf(actual))
 }

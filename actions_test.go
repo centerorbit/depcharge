@@ -1,19 +1,19 @@
 package main
 
 import (
-	"testing"
-		"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 	"strings"
+	"testing"
 )
 
 func TestTemplateParams(t *testing.T) {
 
-	dep := Dep {
-		Kind: "git",
-		Name: "depcharge",
+	dep := Dep{
+		Kind:     "git",
+		Name:     "depcharge",
 		Location: "./",
 		Params: map[string]string{
-			"is": "be",
+			"is":     "be",
 			"is not": "not to be",
 			"answer": "question",
 		},
@@ -34,8 +34,8 @@ func TestTemplateParams(t *testing.T) {
 }
 
 func TestApplyMustache(t *testing.T) {
-	params := map[string]string {
-		"is": "be",
+	params := map[string]string{
+		"is":     "be",
 		"is not": "not to be",
 		"answer": "question",
 	}
@@ -46,8 +46,7 @@ func TestApplyMustache(t *testing.T) {
 		"that is the {{answer}}.",
 	}
 
-
-	results := applyMustache (params, actionParams)
+	results := applyMustache(params, actionParams)
 
 	assert.Equal(t,
 		"To be, or not to be, that is the question.",

@@ -3,17 +3,17 @@ package main
 import (
 	"fmt"
 	"github.com/ghodss/yaml"
-						"path/filepath"
-					)
+	"path/filepath"
+)
 
 type Dep struct {
-	Name     string   `json:"name"`
-	Kind     string   `json:"kind"`
-	Location string   `json:"location"`
-	MergeDeps [][]Dep `json:"merge-deps"`
-	DepList  []Dep    `json:"deps"`
-	Labels	 []string `json:"labels"`
-	Params map[string]string `json:"params"`
+	Name      string            `json:"name"`
+	Kind      string            `json:"kind"`
+	Location  string            `json:"location"`
+	MergeDeps [][]Dep           `json:"merge-deps"`
+	DepList   []Dep             `json:"deps"`
+	Labels    []string          `json:"labels"`
+	Params    map[string]string `json:"params"`
 }
 
 type DepList struct {
@@ -21,20 +21,18 @@ type DepList struct {
 }
 
 type Perform struct {
-	Kind string
-	Instead string
-	Labels string
-	Action []string
+	Kind      string
+	Instead   string
+	Labels    string
+	Action    []string
 	Exclusive bool
-	DryRun bool
-	Force bool
+	DryRun    bool
+	Force     bool
 }
-
 
 func main() {
 	perform := processArgs()
 	depList := load()
-
 
 	// Figure out our current directory.
 	cwd, _ := filepath.Abs("./")
@@ -60,12 +58,11 @@ func main() {
 
 	// If '--instead' is provided, swap it out for Kind, _after_ filtering has been done
 	if perform.Instead != "" {
-		perform.Kind = perform.Instead;
+		perform.Kind = perform.Instead
 	}
 
 	// We select a handler based on our kind
 	handler := findActionHandler(perform.Kind)
-
 
 	// Finally, call the handler which will find and execute the kind+action
 	//  across all final deps.

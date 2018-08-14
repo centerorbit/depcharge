@@ -1,10 +1,10 @@
 package main
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
 	"path/filepath"
-	)
+	"testing"
+)
 
 func TestUnwrap(t *testing.T) {
 
@@ -13,36 +13,36 @@ func TestUnwrap(t *testing.T) {
 	var foundDeps []Dep
 
 	// Test if nothing is okay
-	foundDeps = unwrap(deps,"", labels)
+	foundDeps = unwrap(deps, "", labels)
 	assert.Empty(t, foundDeps)
 
 	testDep := Dep{
-		Name: "sample",
-		Kind: "git",
+		Name:     "sample",
+		Kind:     "git",
 		Location: "sample",
-		DepList: nil,
-		Labels: nil,
-		Params: nil,
+		DepList:  nil,
+		Labels:   nil,
+		Params:   nil,
 	}
 
 	// Tests single-level dep
 	deps = append(deps, testDep)
-	foundDeps = unwrap(deps,"./", labels)
+	foundDeps = unwrap(deps, "./", labels)
 	assert.Equal(t, deps, foundDeps)
 
 	//Making a nest
 	testDep = Dep{
-		Name: "parent",
-		Kind: "git",
+		Name:     "parent",
+		Kind:     "git",
 		Location: "parent-dir",
 		DepList: []Dep{
-			Dep{
+			{
 				Name:     "child",
 				Kind:     "git",
 				Location: "child-dir",
 				Labels:   []string{"first"},
-				DepList:  []Dep{
-					Dep{
+				DepList: []Dep{
+					{
 						Name:     "grandchild",
 						Kind:     "git",
 						Location: "grandchild-dir",
@@ -50,7 +50,7 @@ func TestUnwrap(t *testing.T) {
 					},
 				},
 			},
-			Dep{
+			{
 				Name:     "sibling",
 				Kind:     "git",
 				Location: "sample",
@@ -60,43 +60,42 @@ func TestUnwrap(t *testing.T) {
 
 	deps = append(deps, testDep)
 
-	foundDeps = unwrap(deps,"./append/", labels)
+	foundDeps = unwrap(deps, "./append/", labels)
 
 	// Test flattening of deps:
 	assert.Equal(t, 5, len(foundDeps))
 
 	// Test dir expanding
-	assert.Equal(t, filepath.Clean("./append/parent-dir"), foundDeps[4].Location) // First in, least nested, last in array
-	assert.Equal(t, filepath.Clean("./append/sample"), foundDeps[0].Location)// Last in, most nested
-	assert.Equal(t, filepath.Clean("./append/parent-dir/child-dir/grandchild-dir"), foundDeps[1].Location)// Last in, most nested
-
+	assert.Equal(t, filepath.Clean("./append/parent-dir"), foundDeps[4].Location)                          // First in, least nested, last in array
+	assert.Equal(t, filepath.Clean("./append/sample"), foundDeps[0].Location)                              // Last in, most nested
+	assert.Equal(t, filepath.Clean("./append/parent-dir/child-dir/grandchild-dir"), foundDeps[1].Location) // Last in, most nested
 
 	// Test label inheritance
 	assert.Empty(t, foundDeps[4].Labels)
-	assert.Equal(t,[]string{"first"}, foundDeps[2].Labels)
-	assert.Equal(t,[]string{"second", "first"}, foundDeps[1].Labels)
+	assert.Equal(t, []string{"first"}, foundDeps[2].Labels)
+	assert.Equal(t, []string{"second", "first"}, foundDeps[1].Labels)
 }
 
 func TestApplyFilterKind(t *testing.T) {
 	testDeps := []Dep{
-		Dep{
+		{
 			Labels: nil,
 		},
-		Dep{
+		{
 			Labels: []string{"one"},
 		},
-		Dep{
+		{
 			Labels: []string{"one", "two"},
 		},
-		Dep{
+		{
 			Labels: []string{"three", "two"},
 		},
 	}
 
 	perform := Perform{
-		Labels: "",
+		Labels:    "",
 		Exclusive: false,
-		Force: true,
+		Force:     true,
 	}
 
 	result := applyFilterLabel(testDeps, perform)
@@ -127,19 +126,18 @@ func TestApplyFilterKind(t *testing.T) {
 	assert.Equal(t, 0, len(result))
 }
 
-
 func TestApplyFilterLabel(t *testing.T) {
 	testDeps := []Dep{
-		Dep{
+		{
 			Kind: "git",
 		},
-		Dep{
+		{
 			Kind: "git",
 		},
-		Dep{
+		{
 			Kind: "git",
 		},
-		Dep{
+		{
 			Kind: "other",
 		},
 	}
@@ -156,7 +154,7 @@ func TestApplyFilterLabel(t *testing.T) {
 
 func TestIsExclusive(t *testing.T) {
 	what := []string{"one", "two"} // dep.labels
-	against := []string{"one"} // labels
+	against := []string{"one"}     // labels
 
 	// Dep does have "one"
 	assert.True(t, isExclusive(what, against))
@@ -180,7 +178,7 @@ func TestIsExclusive(t *testing.T) {
 
 func TestIsInclusive(t *testing.T) {
 	what := []string{"one", "two"} // dep.labels
-	against := []string{"one"} // labels
+	against := []string{"one"}     // labels
 
 	// Dep does have "one"
 	assert.True(t, isInclusive(what, against))

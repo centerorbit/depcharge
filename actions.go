@@ -1,9 +1,9 @@
 package main
 
 import (
-		"github.com/cbroglie/mustache"
-		"os/exec"
 	"fmt"
+	"github.com/cbroglie/mustache"
+	"os/exec"
 	"strings"
 )
 
@@ -29,14 +29,14 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 	complete <- true
 }
 
-func prepDockerComposeAction( dep Dep, perform Perform) string {
+func prepDockerComposeAction(dep Dep, perform Perform) string {
 
 	mustachedActionParams := templateParams(dep, perform)
 
 	return strings.Join(mustachedActionParams, " ")
 }
 
-func dockerComposeAction(complete chan<- bool, perform Perform, action []string)  {
+func dockerComposeAction(complete chan<- bool, perform Perform, action []string) {
 	if perform.DryRun {
 		fmt.Println("Dry run of: ")
 		fmt.Println(perform.Kind, action)
@@ -51,7 +51,7 @@ func dockerComposeAction(complete chan<- bool, perform Perform, action []string)
 
 /// ***  Helpers *** ///
 
-func checkOkay(out []byte, err error)  {
+func checkOkay(out []byte, err error) {
 	if err != nil {
 		fmt.Println("Command finished with error: ", err)
 	}
@@ -63,22 +63,30 @@ func checkOkay(out []byte, err error)  {
 	}
 }
 
-func templateParams(dep Dep, perform Perform) []string  {
+func templateParams(dep Dep, perform Perform) []string {
 	// Adding kind, name, and location to possible template params
-	if dep.Params == nil { dep.Params = map[string]string{} }
-	if _, ok := dep.Params["kind"];     !ok { dep.Params["kind"]     = dep.Kind	    }
-	if _, ok := dep.Params["name"];     !ok { dep.Params["name"]     = dep.Name	    }
-	if _, ok := dep.Params["location"]; !ok { dep.Params["location"] = dep.Location	}
+	if dep.Params == nil {
+		dep.Params = map[string]string{}
+	}
+	if _, ok := dep.Params["kind"]; !ok {
+		dep.Params["kind"] = dep.Kind
+	}
+	if _, ok := dep.Params["name"]; !ok {
+		dep.Params["name"] = dep.Name
+	}
+	if _, ok := dep.Params["location"]; !ok {
+		dep.Params["location"] = dep.Location
+	}
 
 	mustachedActionParams := applyMustache(dep.Params, perform.Action)
 
 	return mustachedActionParams
 }
 
-func applyMustache (params map[string]string, actionParams []string) []string  {
+func applyMustache(params map[string]string, actionParams []string) []string {
 	var mustachedActionParams []string
 
-	for _, value := range(actionParams){
+	for _, value := range actionParams {
 		data, _ := mustache.Render(value, params)
 		mustachedActionParams = append(mustachedActionParams, data)
 	}

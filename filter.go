@@ -1,9 +1,9 @@
 package main
 
 import (
-	"path/filepath"
 	"fmt"
-		"strings"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -13,7 +13,7 @@ This is due to YAML limitations:
 	// Step 0: Flatten merge-deps with deps. Because YAML doesn't support merging sequences:
 	//  http://yaml4r.sourceforge.net/doc/page/collections_in_yaml.htm
 	// 	https://stackoverflow.com/a/30770740/663058
- */
+*/
 func flatten(deps []Dep) []Dep {
 	//Go through all of the deps, and check if they need flattening.
 	for key, dep := range deps {
@@ -35,19 +35,18 @@ func flatten(deps []Dep) []Dep {
 	return deps
 }
 
-
 /**
 Flattens the Dep YAML
 	dep.Labels are inherited
 	dep.Location is expanded
- */
+*/
 func unwrap(deps []Dep, baseDir string, labels []string) []Dep {
 	var foundDeps []Dep
 	for _, dep := range deps {
 		dep.Location = filepath.Clean(baseDir + dep.Location)
 		dep.Labels = append(dep.Labels, labels...) // Inherit labels
 		if dep.DepList != nil {
-			foundDeps = append(foundDeps, unwrap(dep.DepList, dep.Location + "/", dep.Labels)...)
+			foundDeps = append(foundDeps, unwrap(dep.DepList, dep.Location+"/", dep.Labels)...)
 			dep.DepList = nil
 		}
 
@@ -59,7 +58,7 @@ func unwrap(deps []Dep, baseDir string, labels []string) []Dep {
 
 /**
 Filters out to just a kind
- */
+*/
 func applyFilterKind(deps []Dep, kind string) []Dep {
 	var foundDeps []Dep
 	for _, dep := range deps {
@@ -72,13 +71,13 @@ func applyFilterKind(deps []Dep, kind string) []Dep {
 }
 
 /**
-	Applies filters
-	Splits comma separated
- */
+Applies filters
+Splits comma separated
+*/
 func applyFilterLabel(deps []Dep, perform Perform) []Dep {
 	if perform.Labels == "" {
 		fmt.Println("Warning: No labels, using all deps of kind.")
-		if ! perform.Force {
+		if !perform.Force {
 			fmt.Println("Press Ctrl+c to cancel...")
 			time.Sleep(5 * time.Second)
 		}
@@ -111,11 +110,11 @@ func isExclusive(what []string, against []string) bool {
 	for _, item := range what {
 		for _, compare := range against {
 			if item == compare {
-				counter ++
+				counter++
 			}
 		}
 	}
-	if len(against) == counter{
+	if len(against) == counter {
 		return true
 	}
 	return false
@@ -139,4 +138,3 @@ InclusiveSearch:
 
 	return match
 }
-

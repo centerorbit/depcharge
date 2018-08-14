@@ -1,8 +1,8 @@
 package main
 
 import (
-	"os"
 	"fmt"
+	"os"
 	"path/filepath"
 )
 
@@ -18,7 +18,6 @@ func findActionHandler(kind string) func(chan<- bool, []Dep, Perform) int {
 		return defaultActionHandler
 	}
 }
-
 
 /// *** Action Handlers *** ///
 
@@ -42,7 +41,7 @@ func dockerComposeHandler(complete chan<- bool, deps []Dep, perform Perform) int
 
 	// Cycle through all deps, and build out an array of override yml files
 	for _, dep := range deps {
-		override = append(override,"-f", filepath.Clean(prepDockerComposeAction(dep, perform)))
+		override = append(override, "-f", filepath.Clean(prepDockerComposeAction(dep, perform)))
 	}
 
 	// Append on the action and override, this is tacked onto the end, as per how docker-compose functions
@@ -78,7 +77,6 @@ func gitActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
 	return n
 }
 
-
 // TODO: make a special handler for secrets
 func secretesActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
 	n := 0
@@ -94,13 +92,16 @@ func secretesActionHandler(complete chan<- bool, deps []Dep, perform Perform) in
 	return n
 }
 
-
 /// ***  Helpers *** ///
 
 // exists returns whether the given file or directory exists or not
 func exists(path string) (bool, error) {
 	_, err := os.Stat(path)
-	if err == nil { return true, nil }
-	if os.IsNotExist(err) { return false, nil }
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
 	return true, err
 }
