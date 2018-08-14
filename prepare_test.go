@@ -4,7 +4,7 @@ import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"os"
-	"flag"
+	"github.com/integrii/flaggy"
 )
 
 /**
@@ -20,7 +20,7 @@ func TestLoad(t *testing.T) {
 func TestProcessArgs(t *testing.T) {
 	oldArgs := os.Args
 
-	os.Args = []string{"", "--kind=git", "--inclusive", "--dryrun","--labels=some,thing", "status"}
+	os.Args = []string{"", "--kind=git", "--inclusive", "--dryrun","--labels=some,thing", "--", "status"}
 	results := processArgs()
 
 	assert.Equal(t, "git", results.Kind)
@@ -30,5 +30,5 @@ func TestProcessArgs(t *testing.T) {
 	assert.False(t,  results.Exclusive)
 
 	os.Args = oldArgs
-	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
+	flaggy.ResetParser()
 }
