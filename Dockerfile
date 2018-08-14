@@ -4,10 +4,11 @@ RUN apk update \
 	&& apk add git \
 	&& rm -rf /var/cache/apk/*
 
-RUN go get -t ./...
-
 COPY . /go/src/depcharge
 WORKDIR /go/src/depcharge
+
+RUN go get -t ./...
+
 
 RUN go test .
 RUN go build .
