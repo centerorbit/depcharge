@@ -4,10 +4,7 @@ RUN apk update \
 	&& apk add git \
 	&& rm -rf /var/cache/apk/*
 
-RUN go get \
-    github.com/ghodss/yaml \
-    github.com/cbroglie/mustache/... \
-    github.com/stretchr/testify
+RUN go get -t ./...
 
 COPY . /go/src/depcharge
 WORKDIR /go/src/depcharge
