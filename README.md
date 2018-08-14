@@ -5,9 +5,9 @@ DepCharge is a tool designed to help orchestrate the execution of commands acros
 
 **Sneak peek:**
 
-	depcharge --kind=git clone {{repo}} {{location}}
+	depcharge --labels=api -- git clone {{repo}} {{location}}
 	
-Will run `git clone` across all listed git dependencies in your project (where submodules use to rule the land)
+Will run `git clone` across all listed git dependencies with the label of "api" in your project (where submodules use to rule the land)
 
 
 ## Introduction
@@ -24,7 +24,7 @@ All of the examples here are just that: examples. DepCharge is designed to be as
 
 DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once.
 
-Usage: `depcharge [--kind=<kind>] [--instead=<action>] [--labels=<comma-separated,inherited>] [OPTIONS...] COMMAND [ARGS...]`
+Usage: `depcharge [--kind=<kind>] [--instead=<action>] [--labels=<comma-separated,inherited>] [OPTIONS...] -- COMMAND [ARGS...]`
 
 ### Features:
 * Supports arbitrary params, whatever 'params: key: value' pairs you want
@@ -81,19 +81,23 @@ deps:
 
 Will run `git clone <repo> <location>` across all git dependencies:
 
-	depcharge --kind=git clone {{repo}} {{location}}
+	depcharge --kind=git -- clone {{repo}} {{location}}
+	
+Or, shorthand:
+
+	depcharge -- git clone {{repo}} {{location}}
 	
 Will run `git status` across all git dependencies:
 
-	depcharge --kind=git status
+	depcharge -- git status
 	
 Will run `npm install` across any npm dependencies that have the label 'public':
 
-	depcharge --kind=npm --labels=public install
+	depcharge --labels=public -- npm install
 	
 Will run `composer install` across any composer dependencies that have either the label 'api', or 'soap':
 
-	depcharge --kind=composer --inclusive --labels=api,soap install
+	depcharge --inclusive --labels=api,soap -- composer install
 	
 And much more!
 
@@ -149,9 +153,6 @@ This is treated specially, in the sense that a regular clone will not act if par
      * DepCharge: `depcharge --kind=docker-compose up {{location}}/{{file}}`
    * This is all subject to change as things get tested, and we near **v1.0**
 
-## Final Caveats
-* It currently cannot handle a command flag directly after app flags (there's an issue for that)
-
 ## Additional Resources
 * https://mustache.github.io/
 
@@ -161,7 +162,6 @@ This is treated specially, in the sense that a regular clone will not act if par
 
 
 ## License
-
 - [LICENSE](LICENSE) (Expat/[MIT License][MIT])
 
 [MIT]: http://www.opensource.org/licenses/MIT "The MIT License (MIT)"

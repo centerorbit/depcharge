@@ -18,8 +18,7 @@ init:
   - export GOPATH=$(pwd)
   - export GOBIN=$GOPATH/bin
   - apk update && apk add git
-  - go get ./...
-  - go get github.com/stretchr/testify
+  - go get -t ./...
   artifacts:
     expire_in: 10 minutes
     paths:
