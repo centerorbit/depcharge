@@ -1,9 +1,9 @@
 package main
 
 import (
-	"testing"
-	"os"
 	"github.com/integrii/flaggy"
+	"os"
+	"testing"
 )
 
 func TestDepMain(t *testing.T) {
