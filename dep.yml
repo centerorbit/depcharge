@@ -5,12 +5,17 @@ deps:
   deps:
     - name: gitlab
       kind: git
-      location:
+      location: ./
+      labels:
+        - development
+        - pipeline
       params:
         repo: git@gitlab.com:centerorbit/depcharge.git
     - name: github
       kind: git
-      location:
+      location: ./
+      labels:
+        - public
       params:
         repo: git@github.com:centerorbit/depcharge.git
     - name: yaml-parser
