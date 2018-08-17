@@ -100,7 +100,7 @@ release:
   script:
     # Lets make the initial release on GitHub
     - export TAG=$(echo $TAG| cut -c1-7)
-    - php /var/code/createRelease.php
+    - export UPLOAD_URL=$(php /var/code/createRelease.php)
 
     # Send Linux binary to GitHub 
     - export RELEASE_NAME="linux-x64"
