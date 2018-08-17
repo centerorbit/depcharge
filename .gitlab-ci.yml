@@ -86,7 +86,7 @@ release:
   image: registry.gitlab.com/centerorbit/release-github
   stage: release
   dependencies:
-    - build
+    - build-linux
   variables:
     GIT_STRATEGY: none
     OWNER: "centerorbit"
