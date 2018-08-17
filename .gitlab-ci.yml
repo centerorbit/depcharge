@@ -98,18 +98,20 @@ release:
     ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
     PRE_RELEASE: "true"
   script:
+    # Lets make the initial release on GitHub
     - export TAG=$(echo $TAG| cut -c1-7)
+    - php /var/code/createRelease.php
 
     # Send Linux binary to GitHub 
     - export RELEASE_NAME="linux-x64"
     - mv depcharge-linux depcharge
     - zip -m $RELEASE_NAME.zip depcharge
-    - php /var/code/release.php
+    - php /var/code/uploadBinary.php
 
     # Send Mac binary to GitHub 
     - export RELEASE_NAME="mac-x64"
     - mv depcharge-mac depcharge
     - zip -m $RELEASE_NAME.zip depcharge
-    - php /var/code/release.php
+    - php /var/code/uploadBinary.php
   only:
     - master
