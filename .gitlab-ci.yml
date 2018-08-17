@@ -113,4 +113,3 @@ release:
     - php /var/code/release.php
   only:
     - master
-    - mac-build
