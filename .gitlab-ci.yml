@@ -47,10 +47,11 @@ build-linux:
   script:
     - export GOPATH=$(pwd)
     - go build .
+    - mv depcharge depcharge-linux
   artifacts:
     expire_in: 1 week
     paths:
-      - depcharge
+      - depcharge-linux
 
 build-mac:
   stage: build
@@ -61,10 +62,11 @@ build-mac:
   script:
     - export GOPATH=$(pwd)
     - go build .
+    - mv depcharge depcharge-mac
   artifacts:
     expire_in: 1 week
     paths:
-      - depcharge
+      - depcharge-mac
 
 build-docker:
   image: docker:latest
@@ -87,17 +89,28 @@ release:
   stage: release
   dependencies:
     - build-linux
+    - build-mac
   variables:
     GIT_STRATEGY: none
     OWNER: "centerorbit"
     REPO: "depcharge"
     TAG: $CI_COMMIT_SHA
-    RELEASE_NAME: "linux-x64"
     ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
     PRE_RELEASE: "true"
   script:
-    - zip -m $RELEASE_NAME.zip depcharge
     - export TAG=$(echo $TAG| cut -c1-7)
+
+    # Send Linux binary to GitHub 
+    - export RELEASE_NAME="linux-x64"
+    - mv depcharge-linux depcharge
+    - zip -m $RELEASE_NAME.zip depcharge
+    - php /var/code/release.php
+
+    # Send Mac binary to GitHub 
+    - export RELEASE_NAME="mac-x64"
+    - mv depcharge-mac depcharge
+    - zip -m $RELEASE_NAME.zip depcharge
     - php /var/code/release.php
   only:
     - master
+    - mac-build
