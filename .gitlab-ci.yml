@@ -119,11 +119,13 @@ release:
     REPO: "depcharge"
     TAG: $CI_COMMIT_SHA
     ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
-    PRE_RELEASE: "true"
   script:
     # Going to assume we don't need to push tags, but we'll have to see how fast they
     #  propogate with the other syncing mechanism.
     # - git push --tags git@github.com:centerorbit/depcharge.git 
+
+    # If it's a tag, then it's not a prerelease
+    - if [ -z $CI_COMMIT_TAG ]; then export PRE_RELEASE="true" ; else unset PRE_RELEASE ; fi
 
     # Lets make the initial release on GitHub
     - export TAG=$(if [ -z $CI_COMMIT_TAG ]; then echo $TAG| cut -c1-7 ; else echo $CI_COMMIT_TAG; fi)
