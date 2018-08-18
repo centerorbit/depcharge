@@ -9,9 +9,8 @@ WORKDIR /go/src/depcharge
 
 RUN go get -t ./...
 
-
 RUN go test .
-RUN go build .
+RUN go build -ldflags="-w -s -X main.version=$VERSION" .
 
 FROM alpine:latest
 COPY --from=go /go/src/depcharge/depcharge /bin/depcharge
