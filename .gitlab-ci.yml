@@ -125,7 +125,7 @@ release:
     # - git push --tags git@github.com:centerorbit/depcharge.git 
 
     # If it's a tag, then it's not a prerelease
-    if [ -z $CI_COMMIT_TAG ]; then export PRE_RELEASE="true" ; else unset PRE_RELEASE ; fi
+    - if [ -z $CI_COMMIT_TAG ]; then export PRE_RELEASE="true" ; else unset PRE_RELEASE ; fi
 
     # Lets make the initial release on GitHub
     - export TAG=$(if [ -z $CI_COMMIT_TAG ]; then echo $TAG| cut -c1-7 ; else echo $CI_COMMIT_TAG; fi)
