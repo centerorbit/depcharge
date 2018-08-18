@@ -67,6 +67,25 @@ build-mac:
     expire_in: 1 week
     paths:
       - depcharge-mac
+  only:
+  - master
+
+build-win:
+  stage: build
+  tags:
+    - win-x64
+  dependencies:
+    - init
+  script:
+    - export GOPATH=$(pwd)
+    - go build .
+    - mv depcharge depcharge-win
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - depcharge-win
+  only:
+    - master
 
 build-docker:
   image: docker:latest
@@ -90,6 +109,7 @@ release:
   dependencies:
     - build-linux
     - build-mac
+    - build-win
   variables:
     GIT_STRATEGY: none
     OWNER: "centerorbit"
