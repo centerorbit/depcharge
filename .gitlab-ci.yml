@@ -121,6 +121,7 @@ release:
     ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
   script:
     # Pushing latest commits, then tags in pipeline, because mirroring isn't fast enough.
+    - git checkout master
     - git push https://centerorbit:$GITHUB_ACCESS_TOKEN@github.com/centerorbit/depcharge.git 
     - git push --tags https://centerorbit:$GITHUB_ACCESS_TOKEN@github.com/centerorbit/depcharge.git 
 
