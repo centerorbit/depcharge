@@ -78,7 +78,7 @@ build-win:
   dependencies:
     - init
   script:
-    - export GOPATH=$(pwd)
+    - set GOPATH=%cd%
     - go build .
   artifacts:
     expire_in: 1 week
