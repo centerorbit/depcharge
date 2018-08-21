@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/ghodss/yaml"
 	"path/filepath"
 )
 
@@ -29,7 +28,6 @@ type Perform struct {
 	DryRun    bool
 	Force     bool
 }
-
 
 func main() {
 	perform := processArgs()
@@ -75,14 +73,4 @@ func main() {
 		<-complete
 	}
 	fmt.Println("depcharge complete!")
-}
-
-/// ***  Helpers *** ///
-
-func dumpStruct(depList []Dep) string {
-	fmt.Println("Dumping JSON:")
-	newYaml, _ := yaml.Marshal(depList)
-	newJson, _ := yaml.YAMLToJSON(newYaml)
-	fmt.Println(string(newJson))
-	return string(newJson)
 }

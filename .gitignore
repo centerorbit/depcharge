@@ -6,3 +6,6 @@ bin
 pkg
 src
 VERSION
+
+c.out
+c.html

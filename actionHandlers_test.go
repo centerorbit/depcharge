@@ -17,6 +17,56 @@ func TestFindActionHandler(t *testing.T) {
 	functionEqual(t, defaultActionHandler, handler)
 }
 
+func TestDockerComposeHandler(t *testing.T) {
+	perform := Perform{
+		Action: []string{"up", "file.yml"},
+	}
+
+	deps := []Dep{
+		Dep{
+
+		},
+	}
+
+	complete := make(chan bool)
+	n := dockerComposeHandler(complete, deps, perform)
+	assert.Equal(t, 1, n)
+}
+
+func TestGitHandler(t *testing.T) {
+	perform := Perform{
+		Action: []string{"clone", "source", "location"},
+		DryRun:true,
+	}
+
+	deps := []Dep{
+		Dep{
+
+		},
+	}
+
+	complete := make(chan bool)
+	n := gitActionHandler(complete, deps, perform)
+	assert.Equal(t, 1, n)
+}
+
+func TestSecretsHandler(t *testing.T) {
+	perform := Perform{
+		Action: []string{"clone", "source", "location"},
+		DryRun:true,
+	}
+
+	deps := []Dep{
+		Dep{
+
+		},
+	}
+
+	complete := make(chan bool)
+	n := secretesActionHandler(complete, deps, perform)
+	assert.Equal(t, 1, n)
+}
+
 func functionEqual(t *testing.T,
 	expected func(chan<- bool, []Dep, Perform) int,
 	actual func(chan<- bool, []Dep, Perform) int) {
