@@ -112,7 +112,7 @@ func processArgs() Perform {
 	if kind == "" && len(action) == 0 {
 		flaggy.ShowHelpAndExit("\n ERROR: You must provide at least a '--kind' or one ARG.")
 	}
-	if kind =="" && len(action) >= 1  {
+	if kind == "" && len(action) >= 1 {
 		// First, grab the action (ie up, or build)
 		perform.Kind = action[0]
 		//Trim off the first action, so that it doesn't get loop-added by the deps

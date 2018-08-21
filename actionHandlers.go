@@ -46,13 +46,17 @@ func dockerComposeHandler(complete chan<- bool, deps []Dep, perform Perform) int
 
 	// Append on the action and override, this is tacked onto the end, as per how docker-compose functions
 	action = append(override, action...)
-	go dockerComposeAction(complete, perform, action)
+
+	performAction := depInjDockerComposeAction()
+	go performAction(complete, perform, action)
 
 	// Return 1, because we only are doing 1 go routine
 	return 1
 }
 
 func gitActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
+	performAction := depInjDefaultAction()
+
 	n := 0
 	for _, dep := range deps {
 		n++
@@ -68,10 +72,10 @@ func gitActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
 				}
 			}
 
-			go defaultAction(complete, dep, perform)
+			go performAction(complete, dep, perform)
 
 		default:
-			go defaultAction(complete, dep, perform)
+			go performAction(complete, dep, perform)
 		}
 	}
 	return n
@@ -79,6 +83,8 @@ func gitActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
 
 // TODO: make a special handler for secrets
 func secretesActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
+	performAction := depInjDefaultAction()
+
 	n := 0
 	for _, dep := range deps {
 		n++
@@ -86,22 +92,8 @@ func secretesActionHandler(complete chan<- bool, deps []Dep, perform Perform) in
 		//case "get": // Or something along these lines
 		// Right now, everything falls through to default.
 		default:
-			go defaultAction(complete, dep, perform)
+			go performAction(complete, dep, perform)
 		}
 	}
 	return n
-}
-
-/// ***  Helpers *** ///
-
-// exists returns whether the given file or directory exists or not
-func exists(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true, nil
-	}
-	if os.IsNotExist(err) {
-		return false, nil
-	}
-	return true, err
 }
