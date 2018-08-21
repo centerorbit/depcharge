@@ -1,5 +1,11 @@
 # DepCharge
-[![Go Report Card](https://goreportcard.com/badge/github.com/centerorbit/depcharge)](https://goreportcard.com/report/github.com/centerorbit/depcharge) [![pipeline status](https://gitlab.com/centerorbit/depcharge/badges/master/pipeline.svg)](https://gitlab.com/centerorbit/depcharge/commits/master) [![coverage report](https://gitlab.com/centerorbit/depcharge/badges/master/coverage.svg)](https://gitlab.com/centerorbit/depcharge/commits/master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/centerorbit/depcharge)](https://goreportcard.com/report/github.com/centerorbit/depcharge)
+[![pipeline status](https://gitlab.com/centerorbit/depcharge/badges/master/pipeline.svg)](https://gitlab.com/centerorbit/depcharge/commits/master)
+[![coverage report](https://gitlab.com/centerorbit/depcharge/badges/master/coverage.svg)](https://gitlab.com/centerorbit/depcharge/commits/master)
+[![GitHub license](https://img.shields.io/github/license/centerorbit/depcharge.svg)](https://github.com/centerorbit/depcharge/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/centerorbit/depcharge.svg)](https://github.com/centerorbit/depcharge/releases/latest)
+
+
 
 DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once. It also proves to provide an excellent mechanism for self-documenting a project's vast (and often disparate) dependencies.
 
