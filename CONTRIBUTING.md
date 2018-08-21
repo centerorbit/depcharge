@@ -22,7 +22,7 @@ https://github.com/golang/go/issues/22430#issuecomment-414668599
 
 ```
 go test -coverprofile=c.out
-sed "s/_$(pwd|sed 's/\//\\\//g')/./g" c.out > c.out
+sed -i "s/_$(pwd|sed 's/\//\\\//g')/./g" c.out
 go tool cover -html=c.out -o=c.html
 ```
 
