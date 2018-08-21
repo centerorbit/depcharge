@@ -5,7 +5,7 @@ depcharge
 bin
 pkg
 src
-VERSION
+VERSION.txt
 
 c.out
 c.html

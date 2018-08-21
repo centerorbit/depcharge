@@ -7,8 +7,8 @@ import (
 	"os"
 )
 
-func depInjDockerComposeAction( ) func(complete chan<- bool, perform Perform, action []string)  {
-	if(isTesting()) {
+func depInjDockerComposeAction() func(complete chan<- bool, perform Perform, action []string) {
+	if isTesting() {
 		return func(complete chan<- bool, perform Perform, action []string) {
 			fmt.Println("Mock dockerComposeAction")
 		}
@@ -16,8 +16,8 @@ func depInjDockerComposeAction( ) func(complete chan<- bool, perform Perform, ac
 	return dockerComposeAction
 }
 
-func depInjDefaultAction( ) func (chan<- bool, Dep, Perform) {
-	if(isTesting()) {
+func depInjDefaultAction() func(chan<- bool, Dep, Perform) {
+	if isTesting() {
 		return func(complete chan<- bool, dep Dep, perform Perform) {
 			fmt.Println("Mock dockerComposeAction")
 		}
@@ -25,7 +25,7 @@ func depInjDefaultAction( ) func (chan<- bool, Dep, Perform) {
 	return defaultAction
 }
 
-func isTesting()bool {
+func isTesting() bool {
 	if flag.Lookup("test.v") == nil {
 		return false
 	}

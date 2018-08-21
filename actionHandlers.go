@@ -47,7 +47,6 @@ func dockerComposeHandler(complete chan<- bool, deps []Dep, perform Perform) int
 	// Append on the action and override, this is tacked onto the end, as per how docker-compose functions
 	action = append(override, action...)
 
-
 	performAction := depInjDockerComposeAction()
 	go performAction(complete, perform, action)
 

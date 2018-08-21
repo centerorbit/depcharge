@@ -23,9 +23,7 @@ func TestDockerComposeHandler(t *testing.T) {
 	}
 
 	deps := []Dep{
-		Dep{
-
-		},
+		{},
 	}
 
 	complete := make(chan bool)
@@ -36,13 +34,11 @@ func TestDockerComposeHandler(t *testing.T) {
 func TestGitHandler(t *testing.T) {
 	perform := Perform{
 		Action: []string{"clone", "source", "location"},
-		DryRun:true,
+		DryRun: true,
 	}
 
 	deps := []Dep{
-		Dep{
-
-		},
+		{},
 	}
 
 	complete := make(chan bool)
@@ -53,13 +49,11 @@ func TestGitHandler(t *testing.T) {
 func TestSecretsHandler(t *testing.T) {
 	perform := Perform{
 		Action: []string{"clone", "source", "location"},
-		DryRun:true,
+		DryRun: true,
 	}
 
 	deps := []Dep{
-		Dep{
-
-		},
+		{},
 	}
 
 	complete := make(chan bool)
