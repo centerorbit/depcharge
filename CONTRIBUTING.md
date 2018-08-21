@@ -23,4 +23,4 @@ On most days:
 Edit c.out to be `./` relative path, at least until I figure out how to properly work with it.
 https://github.com/Masterminds/glide/issues/43
 
-`go tool cover -html=c.out -o=result.html`
+`go tool cover -html=c.out -o=c.html`
