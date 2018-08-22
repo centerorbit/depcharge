@@ -78,11 +78,9 @@ func applyFilterLabel(deps []Dep, perform Perform) []Dep {
 	if perform.Labels == "" {
 		fmt.Println("Warning: No labels, using all deps of kind.")
 
-		if !perform.Force {
-			if(!askForConfirmation("Are you sure you want to continue?")){
-				fmt.Println("DepCharge cancelled.")
-				os.Exit(0)
-			}
+		if !perform.Force && !askForConfirmation("Are you sure you want to continue?"){
+			fmt.Println("DepCharge cancelled.")
+			os.Exit(0)
 		}
 		// If no labels, and only kind, return that.
 		return deps

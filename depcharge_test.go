@@ -9,7 +9,7 @@ import (
 func TestDepMain(t *testing.T) {
 	oldArgs := os.Args
 
-	os.Args = []string{"", "--kind=go", "--dryrun", "--", "get", "{{get}}"}
+	os.Args = []string{"", "--kind=go", "--force", "--dryrun", "--", "get", "{{get}}"}
 	main()
 
 	os.Args = oldArgs

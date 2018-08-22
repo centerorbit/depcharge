@@ -34,6 +34,10 @@ func processArgs() Perform {
 	dryRun := false
 	flaggy.Bool(&dryRun, "d", "dryrun", "Will print out the command to be run, does not make changes to your system.")
 
+	force := false
+	flaggy.Bool(&force, "f", "force", "Will force-run a command without confirmations, could be dangerous.")
+
+
 	flaggy.SetDescription(" a tool designed to help orchestrate the execution of commands across many directories at once.")
 
 	flaggy.DefaultParser.AdditionalHelpPrepend = "\n" +
@@ -126,6 +130,7 @@ func processArgs() Perform {
 	perform.Labels = labels
 	perform.Exclusive = exclusive
 	perform.DryRun = dryRun
+	perform.Force = force
 
 	return perform
 }
