@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/ghodss/yaml"
 	"os"
 	"log"
 	"strings"
@@ -47,13 +46,13 @@ func exists(path string) (bool, error) {
 	return true, err
 }
 
-func dumpStruct(depList []Dep) string {
-	fmt.Println("Dumping JSON:")
-	newYaml, _ := yaml.Marshal(depList)
-	newJson, _ := yaml.YAMLToJSON(newYaml)
-	fmt.Println(string(newJson))
-	return string(newJson)
-}
+//func dumpStruct(depList []Dep) string {
+//	fmt.Println("Dumping JSON:")
+//	newYaml, _ := yaml.Marshal(depList)
+//	newJson, _ := yaml.YAMLToJSON(newYaml)
+//	fmt.Println(string(newJson))
+//	return string(newJson)
+//}
 
 // https://gist.github.com/albrow/5882501
 // askForConfirmation uses Scanln to parse user input. A user must type in "yes" or "no" and
