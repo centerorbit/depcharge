@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
-	"time"
+	"os"
 )
 
 /**
@@ -77,9 +77,12 @@ Splits comma separated
 func applyFilterLabel(deps []Dep, perform Perform) []Dep {
 	if perform.Labels == "" {
 		fmt.Println("Warning: No labels, using all deps of kind.")
+
 		if !perform.Force {
-			fmt.Println("Press Ctrl+c to cancel...")
-			time.Sleep(5 * time.Second)
+			if(!askForConfirmation("Are you sure you want to continue?")){
+				fmt.Println("DepCharge cancelled.")
+				os.Exit(0)
+			}
 		}
 		// If no labels, and only kind, return that.
 		return deps
