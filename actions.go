@@ -17,11 +17,12 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 		fmt.Println("Dry run of: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
 	} else {
 		fmt.Println("Running: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
-
+		command := perform.Kind + " " + strings.Join(mustachedActionParams, " ")
 		cmd := exec.Command(perform.Kind, mustachedActionParams...)
 		cmd.Dir = dep.Location
 		//TODO: Find a way to "stream" output to terminal?
-		checkOkay(cmd.CombinedOutput()) //Combines errors to output
+		out, err := cmd.CombinedOutput()
+		checkOkay(command, out, err) //Combines errors to output
 		//out, err := cmd.Output() // just stdout
 	}
 
@@ -40,9 +41,11 @@ func dockerComposeAction(complete chan<- bool, perform Perform, action []string)
 		fmt.Println("Dry run of: ")
 		fmt.Println(perform.Kind, action)
 	} else {
+		command := perform.Kind + " " + strings.Join(action, " ")
 		cmd := exec.Command(perform.Kind, action...)
 		//TODO: Find a way to "stream" output to terminal?
-		checkOkay(cmd.CombinedOutput()) //Combines errors to output
+		out, err := cmd.CombinedOutput()
+		checkOkay(command, out, err) //Combines errors to output
 	}
 
 	complete <- true
@@ -50,9 +53,10 @@ func dockerComposeAction(complete chan<- bool, perform Perform, action []string)
 
 /// ***  Helpers *** ///
 
-func checkOkay(out []byte, err error) {
+func checkOkay(command string, out []byte, err error) {
 	if err != nil {
 		fmt.Println("Command finished with error: ", err)
+		fmt.Println(command)
 	}
 
 	if string(out) == "" {
