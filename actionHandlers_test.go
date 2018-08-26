@@ -30,6 +30,13 @@ func TestGitHandler(t *testing.T) {
 	complete := make(chan bool)
 	n := gitActionHandler(complete, deps, perform)
 	assert.Equal(t, 1, n)
+
+	perform = Perform{
+		Action: []string{"status"},
+		DryRun: true,
+	}
+	n = gitActionHandler(complete, deps, perform)
+	assert.Equal(t, 1, n)
 }
 
 func TestSecretsHandler(t *testing.T) {

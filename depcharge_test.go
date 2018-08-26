@@ -30,6 +30,11 @@ func TestDepMain(t *testing.T) {
 	os.Args = []string{"", "--kind=go", "--force", "--dryrun", "--", "get", "{{get}}"}
 	main()
 
+	flaggy.ResetParser()
+
+	os.Args = []string{"", "--force", "--", "go", "get", "{{get}}"}
+	main()
+
 	os.Args = oldArgs
 	flaggy.ResetParser()
 }
