@@ -51,12 +51,17 @@ func exists(path string) (bool, error) {
 // confirmations. If the input is not recognized, it will ask again. The function does not return
 // until it gets a valid response from the user. Typically, you should use fmt to print out a question
 // before calling askForConfirmation. E.g. fmt.Println("WARNING: Are you sure? (yes/no)")
-func askForConfirmation(request string) bool {
+// input gets an array from the user.
+func askForConfirmation(request string, in *os.File) bool {
+	if in == nil {
+		in = os.Stdin
+	}
+
 	fmt.Println(request)
 	fmt.Print("[y|N]: ")
 
 	var response string
-	_, err := fmt.Scanln(&response)
+	_, err := fmt.Fscanln(in, &response)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,7 +75,7 @@ func askForConfirmation(request string) bool {
 		return false
 	} else {
 		fmt.Println("Please type yes or no and then press enter:")
-		return askForConfirmation(request)
+		return askForConfirmation(request, in)
 	}
 }
 
