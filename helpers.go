@@ -8,15 +8,6 @@ import (
 	"strings"
 )
 
-func depInjDockerComposeAction() func(complete chan<- bool, perform Perform, action []string) {
-	if isTesting() {
-		return func(complete chan<- bool, perform Perform, action []string) {
-			fmt.Println("Mock dockerComposeAction")
-		}
-	}
-	return dockerComposeAction
-}
-
 func depInjDefaultAction() func(chan<- bool, Dep, Perform) {
 	if isTesting() {
 		return func(complete chan<- bool, dep Dep, perform Perform) {

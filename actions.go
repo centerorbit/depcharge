@@ -29,28 +29,6 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 	complete <- true
 }
 
-func prepDockerComposeAction(dep Dep, perform Perform) string {
-
-	mustachedActionParams := templateParams(dep, perform)
-
-	return strings.Join(mustachedActionParams, " ")
-}
-
-func dockerComposeAction(complete chan<- bool, perform Perform, action []string) {
-	if perform.DryRun {
-		fmt.Println("Dry run of: ")
-		fmt.Println(perform.Kind, action)
-	} else {
-		command := perform.Kind + " " + strings.Join(action, " ")
-		cmd := exec.Command(perform.Kind, action...)
-		//TODO: Find a way to "stream" output to terminal?
-		out, err := cmd.CombinedOutput()
-		checkOkay(command, out, err) //Combines errors to output
-	}
-
-	complete <- true
-}
-
 /// ***  Helpers *** ///
 
 func checkOkay(command string, out []byte, err error) {

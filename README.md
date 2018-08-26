@@ -4,6 +4,7 @@
 [![coverage report](https://gitlab.com/centerorbit/depcharge/badges/master/coverage.svg)](https://gitlab.com/centerorbit/depcharge/commits/master)
 [![GitHub license](https://img.shields.io/github/license/centerorbit/depcharge.svg)](https://github.com/centerorbit/depcharge/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/centerorbit/depcharge.svg)](https://github.com/centerorbit/depcharge/releases/latest)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5ef8ce4f942696ebace7/maintainability)](https://codeclimate.com/github/centerorbit/depcharge/maintainability)
 
 
 
