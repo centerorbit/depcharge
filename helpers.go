@@ -11,7 +11,7 @@ import (
 func depInjDefaultAction() func(chan<- bool, Dep, Perform) {
 	if isTesting() {
 		return func(complete chan<- bool, dep Dep, perform Perform) {
-			fmt.Println("Mock dockerComposeAction")
+			fmt.Println("Mock defaultAction")
 		}
 	}
 	return defaultAction
