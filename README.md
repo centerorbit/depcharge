@@ -4,6 +4,7 @@
 [![coverage report](https://gitlab.com/centerorbit/depcharge/badges/master/coverage.svg)](https://gitlab.com/centerorbit/depcharge/commits/master)
 [![GitHub license](https://img.shields.io/github/license/centerorbit/depcharge.svg)](https://github.com/centerorbit/depcharge/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/centerorbit/depcharge.svg)](https://github.com/centerorbit/depcharge/releases/latest)
+[![Maintainability](https://api.codeclimate.com/v1/badges/5ef8ce4f942696ebace7/maintainability)](https://codeclimate.com/github/centerorbit/depcharge/maintainability)
 
 
 
@@ -153,11 +154,6 @@ DepCharge has the ability to offer special-case action handlers. Specifically fo
 
 1. `git clone`
 This is treated specially, in the sense that a regular clone will not act if parent directories aren't already in place. DepCharge will detect the `clone` action explicitly and attempt to create any parent directories before passing the command directly onto `git`
-1. `docker-compose` This command is still in experimental development, but allows for a depcharge to specify a set of override files that would be passed to the `docker-compose` comand via `-f` flags to start whole subsets or entire local clusters of containers.
-   * It currently does not support flags, only supports the base commands (up, build, down, etc.), and the args are flipped. Example:
-     * Regular: `docker-compose -f file.yml up`
-     * DepCharge: `depcharge --kind=docker-compose up {{location}}/{{file}}`
-   * This is all subject to change as things get tested, and we near **v1.0**
 
 ## Additional Resources
 * https://mustache.github.io/

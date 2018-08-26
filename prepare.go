@@ -10,6 +10,66 @@ import (
 
 var version string
 
+const HelpText = "Usage: depcharge [--kind=<kind>] [--instead=<action>] [--labels=<comma-separated,inherited>] [OPTIONS...] -- [COMMAND/ARGS...]" +
+	"\n\n" +
+	"Features:" +
+	"\n" +
+	"* Supports arbitrary params, whatever 'params: key: value' pairs you want \n" +
+	"* Built-in mustache templating, allows you to parametrize your commands \n" +
+	"* Supports YAML anchors \n" +
+	"\n" +
+	"Description:" +
+	"\n" +
+	"depcharge will read the dep.yml file in the current working directory, and \n" +
+	"perform all commands relative to that location." +
+	"\n\n" +
+	"Example dep.yml:" +
+	"\n" +
+	"deps: \n" +
+	"    - name: frontend \n" +
+	"      kind: git \n" +
+	"      location: ./app/frontend \n" +
+	"      labels: \n" +
+	"        - public \n" +
+	"      params: \n" +
+	"        repo: git@example.com:frontend.git \n" +
+	"      deps: \n" +
+	"        - name: vue.js \n" +
+	"          kind: npm \n" +
+	"    - name: backend \n" +
+	"      kind: git \n" +
+	"      location: ./app/backend \n" +
+	"      labels: \n" +
+	"        - api \n" +
+	"      params: \n" +
+	"        repo: git@example.com:backend.git \n" +
+	"      deps: \n" +
+	"        - name: lumen \n" +
+	"          kind: composer \n" +
+	"" +
+	"\n\n" +
+	"Primary Commands: \n" +
+	"--kind		Is the top-level filter that's applied, opperations are run based on 'kind' \n" +
+	"			if --kind is not specified, then the first COMMAND/ARG is used \n" +
+	"--instead	Is used to specify a command you'd like to run against --kind, but is not 'kind'. \n" +
+	"--labels	Comma separated list of labels to filter by, inherited from parents \n" +
+	"\n" +
+	"Example commands:" +
+	"\n" +
+	"Will run `git clone <location>` across all git dependencies: \n" +
+	"	depcharge --kind=git -- clone {{location}}" +
+	" (same as:)	depcharge -- git clone {{location}}" +
+	"\n\n" +
+	"Will run `git status` across all git dependencies: \n" +
+	"	depcharge -- git status" +
+	"\n\n" +
+	"Will run `npm install` across any npm dependencies that have the label 'public': \n" +
+	"	depcharge --labels=public -- npm install" +
+	"\n\n" +
+	"Will run `composer install` across any composer dependencies that have either the label 'api', or 'soap': \n" +
+	"	depcharge --inclusive --labels=api,soap -- composer install"
+
+
 func processArgs() Perform {
 	flaggy.SetVersion(version)
 
@@ -43,65 +103,7 @@ func processArgs() Perform {
 	flaggy.DefaultParser.AdditionalHelpPrepend = "\n" +
 		"Use -- to separate depcharge commands from intended execution commands."
 
-	flaggy.DefaultParser.AdditionalHelpAppend =
-		"Usage: depcharge [--kind=<kind>] [--instead=<action>] [--labels=<comma-separated,inherited>] [OPTIONS...] -- [COMMAND/ARGS...]" +
-			"\n\n" +
-			"Features:" +
-			"\n" +
-			"* Supports arbitrary params, whatever 'params: key: value' pairs you want \n" +
-			"* Built-in mustache templating, allows you to parametrize your commands \n" +
-			"* Supports YAML anchors \n" +
-			"\n" +
-			"Description:" +
-			"\n" +
-			"depcharge will read the dep.yml file in the current working directory, and \n" +
-			"perform all commands relative to that location." +
-			"\n\n" +
-			"Example dep.yml:" +
-			"\n" +
-			"deps: \n" +
-			"    - name: frontend \n" +
-			"      kind: git \n" +
-			"      location: ./app/frontend \n" +
-			"      labels: \n" +
-			"        - public \n" +
-			"      params: \n" +
-			"        repo: git@example.com:frontend.git \n" +
-			"      deps: \n" +
-			"        - name: vue.js \n" +
-			"          kind: npm \n" +
-			"    - name: backend \n" +
-			"      kind: git \n" +
-			"      location: ./app/backend \n" +
-			"      labels: \n" +
-			"        - api \n" +
-			"      params: \n" +
-			"        repo: git@example.com:backend.git \n" +
-			"      deps: \n" +
-			"        - name: lumen \n" +
-			"          kind: composer \n" +
-			"" +
-			"\n\n" +
-			"Primary Commands: \n" +
-			"--kind		Is the top-level filter that's applied, opperations are run based on 'kind' \n" +
-			"			if --kind is not specified, then the first COMMAND/ARG is used \n" +
-			"--instead	Is used to specify a command you'd like to run against --kind, but is not 'kind'. \n" +
-			"--labels	Comma separated list of labels to filter by, inherited from parents \n" +
-			"\n" +
-			"Example commands:" +
-			"\n" +
-			"Will run `git clone <location>` across all git dependencies: \n" +
-			"	depcharge --kind=git -- clone {{location}}" +
-			" (same as:)	depcharge -- git clone {{location}}" +
-			"\n\n" +
-			"Will run `git status` across all git dependencies: \n" +
-			"	depcharge -- git status" +
-			"\n\n" +
-			"Will run `npm install` across any npm dependencies that have the label 'public': \n" +
-			"	depcharge --labels=public -- npm install" +
-			"\n\n" +
-			"Will run `composer install` across any composer dependencies that have either the label 'api', or 'soap': \n" +
-			"	depcharge --inclusive --labels=api,soap -- composer install"
+	flaggy.DefaultParser.AdditionalHelpAppend = HelpText
 
 	flaggy.Parse()
 	action := flaggy.TrailingArguments
