@@ -12,6 +12,7 @@ func depInjDefaultAction() func(chan<- bool, Dep, Perform) {
 	if isTesting() {
 		return func(complete chan<- bool, dep Dep, perform Perform) {
 			fmt.Println("Mock defaultAction")
+			complete <- true
 		}
 	}
 	return defaultAction
