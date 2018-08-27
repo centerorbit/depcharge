@@ -25,6 +25,7 @@ type Perform struct {
 	Labels    string
 	Action    []string
 	Exclusive bool
+	Serial    bool
 	DryRun    bool
 	Force     bool
 }
@@ -65,12 +66,17 @@ func main() {
 
 	// Finally, call the handler which will find and execute the kind+action
 	//  across all final deps.
-	complete := make(chan bool)
+	complete := make(chan bool, 1)
 
 	n := handler(complete, labelFiltered, perform)
 
-	for i := 0; i < n; i++ {
-		<-complete
+	// In the case we run parallel, block until all goroutines signify completed.
+	if !perform.Serial {
+		for i := 0; i < n; i++ {
+			<-complete
+		}
 	}
+
+
 	fmt.Println("depcharge complete!")
 }

@@ -91,6 +91,9 @@ func processArgs() Perform {
 	inclusive := false
 	flaggy.Bool(&inclusive, "i", "inclusive", "Applies labels in an inclusive way.")
 
+	serial := false
+	flaggy.Bool(&serial, "s", "serial", "Prevents parallel execution, runs commands one at a time.")
+
 	dryRun := false
 	flaggy.Bool(&dryRun, "d", "dryrun", "Will print out the command to be run, does not make changes to your system.")
 
@@ -131,6 +134,7 @@ func processArgs() Perform {
 	perform.Instead = instead
 	perform.Labels = labels
 	perform.Exclusive = exclusive
+	perform.Serial = serial
 	perform.DryRun = dryRun
 	perform.Force = force
 

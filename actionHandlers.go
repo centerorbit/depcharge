@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func findActionHandler(kind string) func(chan<- bool, []Dep, Perform) int {
+func findActionHandler(kind string) func(chan bool, []Dep, Perform) int {
 	switch kind {
 	case "git":
 		return gitActionHandler
@@ -18,16 +18,23 @@ func findActionHandler(kind string) func(chan<- bool, []Dep, Perform) int {
 
 /// *** Action Handlers *** ///
 
-func defaultActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
+func defaultActionHandler(complete chan bool, deps []Dep, perform Perform) int {
+	performAction := depInjDefaultAction()
+
 	n := 0
 	for _, dep := range deps {
 		n++
-		go defaultAction(complete, dep, perform)
+		go performAction(complete, dep, perform)
+
+		// If Serial, block until complete on each.
+		if perform.Serial {
+			<-complete
+		}
 	}
 	return n
 }
 
-func gitActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
+func gitActionHandler(complete chan bool, deps []Dep, perform Perform) int {
 	performAction := depInjDefaultAction()
 
 	n := 0
@@ -50,12 +57,18 @@ func gitActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
 		default:
 			go performAction(complete, dep, perform)
 		}
+
+		// If Serial, block until complete on each.
+		if perform.Serial {
+			<-complete
+		}
 	}
+
 	return n
 }
 
 // TODO: make a special handler for secrets
-func secretesActionHandler(complete chan<- bool, deps []Dep, perform Perform) int {
+func secretesActionHandler(complete chan bool, deps []Dep, perform Perform) int {
 	performAction := depInjDefaultAction()
 
 	n := 0
@@ -66,6 +79,11 @@ func secretesActionHandler(complete chan<- bool, deps []Dep, perform Perform) in
 		// Right now, everything falls through to default.
 		default:
 			go performAction(complete, dep, perform)
+		}
+
+		// If Serial, block until complete on each.
+		if perform.Serial {
+			<-complete
 		}
 	}
 	return n

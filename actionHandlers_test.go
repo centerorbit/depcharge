@@ -7,7 +7,7 @@ import (
 )
 
 func TestFindActionHandler(t *testing.T) {
-	var handler func(chan<- bool, []Dep, Perform) int
+	var handler func(chan bool, []Dep, Perform) int
 
 	handler = findActionHandler("git")
 	functionEqual(t, gitActionHandler, handler)
@@ -55,7 +55,7 @@ func TestSecretsHandler(t *testing.T) {
 }
 
 func functionEqual(t *testing.T,
-	expected func(chan<- bool, []Dep, Perform) int,
-	actual func(chan<- bool, []Dep, Perform) int) {
+	expected func(chan bool, []Dep, Perform) int,
+	actual func(chan bool, []Dep, Perform) int) {
 	assert.Equal(t, reflect.ValueOf(expected), reflect.ValueOf(actual))
 }
