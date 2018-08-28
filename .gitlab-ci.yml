@@ -102,7 +102,7 @@ build-win:
   script:
     - export GOPATH=$(pwd)
     - set /p VERSION=<VERSION.txt
-    - go build -a -ldflags="-w -s -X main.version=%VERSION%" .
+    - go build -a -ldflags="-w -s -X main.version=$VERSION" .
   artifacts:
     expire_in: 1 week
     paths:
