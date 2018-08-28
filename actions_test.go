@@ -11,6 +11,8 @@ import (
 )
 
 
+// Thanks to: https://npf.io/2015/06/testing-exec-command/
+//    and: https://github.com/golang/go/blob/master/src/os/exec/exec_test.go#L31
 func fakeExecCommand(command string, args...string) *exec.Cmd {
 	fmt.Println("Hit fake Exec with", command, args)
 	cs := []string{"-test.run=TestHelperProcess", "--", command}
