@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 	"log"
+	"os"
 	"strings"
 )
 
 var mockDefaultAction func(chan<- bool, Dep, Perform)
+
 func depInjDefaultAction() func(chan<- bool, Dep, Perform) {
 	if isTesting() {
 		if mockDefaultAction != nil {
@@ -37,7 +38,7 @@ func isTesting() bool {
 	return true
 }
 
-func drainChannel(muchness int, toDrain <-chan bool){
+func drainChannel(muchness int, toDrain <-chan bool) {
 	// In the case we run parallel, block until all goroutines signify completed.
 	for i := 0; i < muchness; i++ {
 		<-toDrain
@@ -97,7 +98,6 @@ func askForConfirmation(request string, in *os.File) bool {
 		return askForConfirmation(request, in)
 	}
 }
-
 
 // posString returns the first index of element in slice.
 // If slice does not contain element, returns -1.

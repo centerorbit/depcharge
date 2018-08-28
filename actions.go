@@ -10,6 +10,7 @@ import (
 /// *** Actions *** ///
 
 var execCommand = exec.Command
+
 func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 
 	mustachedActionParams := templateParams(dep, perform)
@@ -33,6 +34,7 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 
 /// ***  Helpers *** ///
 var checkOkayIntercept func(command string, out []byte, err error)
+
 func checkOkay(command string, out []byte, err error) {
 	if checkOkayIntercept != nil {
 		checkOkayIntercept(command, out, err)

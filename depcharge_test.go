@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 
 		if strict {
 			if c < COVER_LIMIT {
-				fmt.Println("Tests passed but coverage was below ",COVER_LIMIT*100,"%")
+				fmt.Println("Tests passed but coverage was below ", COVER_LIMIT*100, "%")
 				rc = -1
 			} else {
 				fmt.Println("Strict coverage passed!")
@@ -36,13 +36,13 @@ func TestMain(m *testing.M) {
 	os.Exit(rc)
 }
 
-
 var oldArgs []string
+
 func TestDepMainDryRun(t *testing.T) {
 	oldArgs = os.Args
 	defer flaggy.ResetParser()
-	defer func(){ os.Args = oldArgs }()
-	defer func(){ mockDefaultAction = nil }()
+	defer func() { os.Args = oldArgs }()
+	defer func() { mockDefaultAction = nil }()
 
 	called := 0
 	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
@@ -51,10 +51,9 @@ func TestDepMainDryRun(t *testing.T) {
 		assert.True(t, perform.DryRun)
 		assert.Equal(t, "get", perform.Action[0])
 		assert.Equal(t, "{{get}}", perform.Action[1])
-		called ++
+		called++
 		complete <- true
 	}
-
 
 	os.Args = []string{"", "--kind=go", "--force", "--dryrun", "--", "get", "{{get}}"}
 	main()
@@ -65,8 +64,8 @@ func TestDepMainDryRun(t *testing.T) {
 func TestDepMainForce(t *testing.T) {
 	oldArgs = os.Args
 	defer flaggy.ResetParser()
-	defer func(){os.Args = oldArgs}()
-	defer func(){ mockDefaultAction = nil }()
+	defer func() { os.Args = oldArgs }()
+	defer func() { mockDefaultAction = nil }()
 
 	called := 0
 	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
@@ -75,7 +74,7 @@ func TestDepMainForce(t *testing.T) {
 		assert.False(t, perform.DryRun)
 		assert.Equal(t, "get", perform.Action[0])
 		assert.Equal(t, "{{get}}", perform.Action[1])
-		called ++
+		called++
 		complete <- true
 	}
 
