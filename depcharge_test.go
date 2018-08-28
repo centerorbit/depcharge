@@ -28,6 +28,8 @@ func TestMain(m *testing.M) {
 			if c < COVER_LIMIT {
 				fmt.Println("Tests passed but coverage was below ",COVER_LIMIT*100,"%")
 				rc = -1
+			} else {
+				fmt.Println("Strict coverage passed!")
 			}
 		}
 	}
