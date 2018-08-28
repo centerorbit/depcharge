@@ -62,7 +62,6 @@ const HelpText = "Usage: depcharge [--kind=<kind>] [--instead=<action>] [--label
 	"Will run `composer install` across any composer dependencies that have either the label 'api', or 'soap': \n" +
 	"	depcharge --inclusive --labels=api,soap -- composer install"
 
-
 func processArgs() Perform {
 	flaggy.SetVersion(version)
 
@@ -92,8 +91,6 @@ func processArgs() Perform {
 
 	instead := ""
 	flaggy.String(&instead, "x", "instead", "Instead of 'kind', perform a different command.")
-
-
 
 	flaggy.SetDescription(" a tool designed to help orchestrate the execution of commands across many directories at once.")
 

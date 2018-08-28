@@ -159,9 +159,7 @@ This is treated specially, in the sense that a regular clone will not act if par
 * https://mustache.github.io/
 
 ## Contributing
-* [GitLab is where development & pipelines occur](https://gitlab.com/centerorbit/depcharge)
-* [GitHub is the public-access repository](https://github.com/centerorbit/depcharge)
-
+See: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 - [LICENSE](LICENSE) (Expat/[MIT License][MIT])

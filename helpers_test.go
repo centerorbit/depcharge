@@ -24,7 +24,7 @@ func TestDepInjDefaultAction(t *testing.T) {
 
 	complete := make(chan bool, 1)
 	fmt.Println("The following errors can be ignored:")
-	result(complete,Dep{},Perform{})
+	result(complete, Dep{}, Perform{})
 	fmt.Println("Okay, resume caring about errors.")
 	<-complete
 }
@@ -89,7 +89,6 @@ func TestAskForConfirmationNo(t *testing.T) {
 	in.Close()
 	fmt.Println()
 
-
 	in, err = setupMockInput("NO")
 	if err != nil {
 		t.Fatal(err)
@@ -98,7 +97,6 @@ func TestAskForConfirmationNo(t *testing.T) {
 	assert.False(t, result)
 	in.Close()
 	fmt.Println()
-
 
 	in, err = setupMockInput("no")
 	if err != nil {
@@ -111,7 +109,6 @@ func TestAskForConfirmationNo(t *testing.T) {
 
 }
 
-
 func TestAskForConfirmationAgain(t *testing.T) {
 	in, err := setupMockInput("Nope \n n")
 	if err != nil {
@@ -122,7 +119,6 @@ func TestAskForConfirmationAgain(t *testing.T) {
 	in.Close()
 	fmt.Println()
 }
-
 
 func TestPosString(t *testing.T) {
 	haystack := []string{"Hello", "World", "Needle"}
@@ -142,7 +138,7 @@ func TestContainsString(t *testing.T) {
 	assert.False(t, found)
 }
 
-func setupMockInput(response string) (in *os.File, err error)  {
+func setupMockInput(response string) (in *os.File, err error) {
 	in, err = ioutil.TempFile("", "")
 	if err != nil {
 		return

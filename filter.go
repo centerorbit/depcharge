@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
-	"os"
 )
 
 /**
@@ -78,7 +78,7 @@ func applyFilterLabel(deps []Dep, perform Perform) []Dep {
 	if perform.Labels == "" {
 		fmt.Println("Warning: No labels, using all deps of kind.")
 
-		if !perform.Force && !askForConfirmation("Are you sure you want to continue?", nil){
+		if !perform.Force && !askForConfirmation("Are you sure you want to continue?", nil) {
 			fmt.Println("DepCharge cancelled.")
 			os.Exit(0)
 		}

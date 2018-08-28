@@ -10,10 +10,9 @@ import (
 	"testing"
 )
 
-
 // Thanks to: https://npf.io/2015/06/testing-exec-command/
 //    and: https://github.com/golang/go/blob/master/src/os/exec/exec_test.go#L31
-func fakeExecCommand(command string, args...string) *exec.Cmd {
+func fakeExecCommand(command string, args ...string) *exec.Cmd {
 	fmt.Println("Hit fake Exec with", command, args)
 	cs := []string{"-test.run=TestHelperProcess", "--", command}
 	cs = append(cs, args...)
@@ -25,12 +24,12 @@ func fakeExecCommand(command string, args...string) *exec.Cmd {
 func TestDefaultAction(t *testing.T) {
 	fmt.Println("Begin testing default action")
 	execCommand = fakeExecCommand
-	defer func(){
+	defer func() {
 		execCommand = exec.Command
 		checkOkayIntercept = nil
 	}()
 
-	checkOkayIntercept = func(command string, out []byte, err error){
+	checkOkayIntercept = func(command string, out []byte, err error) {
 		assert.Equal(t, "git status", command)
 		assert.Nil(t, err)
 		fmt.Println(string(out))
@@ -46,7 +45,7 @@ func TestDefaultAction(t *testing.T) {
 	}
 
 	perform := Perform{
-		Kind: "git",
+		Kind:   "git",
 		Action: []string{"status"},
 	}
 
@@ -57,7 +56,7 @@ func TestDefaultAction(t *testing.T) {
 
 }
 
-func TestHelperProcess(t *testing.T){
+func TestHelperProcess(t *testing.T) {
 	if os.Getenv("GO_WANT_HELPER_PROCESS") != "1" {
 		return
 	}
@@ -67,7 +66,6 @@ func TestHelperProcess(t *testing.T){
 	//fmt.Fprint(os.Stdout, os.Args)
 	os.Exit(0)
 }
-
 
 func TestTemplateParams(t *testing.T) {
 
@@ -89,7 +87,6 @@ func TestTemplateParams(t *testing.T) {
 	assert.Equal(t,
 		"To git, or depcharge, that is the ",
 		strings.Join(results, " "))
-
 
 	dep.Params = map[string]string{
 		"is":     "be",

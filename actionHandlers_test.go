@@ -18,7 +18,7 @@ func TestFindActionHandler(t *testing.T) {
 }
 
 func TestGitHandlerClone(t *testing.T) {
-	defer func(){
+	defer func() {
 		mockDefaultAction = nil
 	}()
 
@@ -29,7 +29,7 @@ func TestGitHandlerClone(t *testing.T) {
 		assert.Equal(t, "source", perform.Action[1])
 		assert.Equal(t, "location", perform.Action[2])
 		assert.True(t, perform.DryRun)
-		called ++
+		called++
 		complete <- true
 	}
 
@@ -40,7 +40,7 @@ func TestGitHandlerClone(t *testing.T) {
 
 	deps := []Dep{
 		{
-			Kind:     "git",
+			Kind: "git",
 		},
 	}
 
@@ -54,7 +54,7 @@ func TestGitHandlerClone(t *testing.T) {
 }
 
 func TestGitHandlerStatus(t *testing.T) {
-	defer func(){
+	defer func() {
 		mockDefaultAction = nil
 	}()
 
@@ -63,7 +63,7 @@ func TestGitHandlerStatus(t *testing.T) {
 		assert.Equal(t, "git", dep.Kind)
 		assert.Equal(t, "status", perform.Action[0])
 		assert.False(t, perform.DryRun)
-		called ++
+		called++
 		complete <- true
 	}
 
@@ -73,7 +73,7 @@ func TestGitHandlerStatus(t *testing.T) {
 
 	deps := []Dep{
 		{
-			Kind:     "git",
+			Kind: "git",
 		},
 	}
 
@@ -86,16 +86,15 @@ func TestGitHandlerStatus(t *testing.T) {
 	assert.Equal(t, 1, called)
 }
 
-
 func TestSecretsHandler(t *testing.T) {
-	defer func(){ mockDefaultAction = nil }()
+	defer func() { mockDefaultAction = nil }()
 
 	called := 0
 	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
 		assert.Equal(t, "secret", dep.Kind)
 		assert.Equal(t, "doesn't", perform.Action[0])
 		assert.Equal(t, "matter", perform.Action[1])
-		called ++
+		called++
 		complete <- true
 	}
 
@@ -106,10 +105,10 @@ func TestSecretsHandler(t *testing.T) {
 
 	deps := []Dep{
 		{
-			Kind:     "secret",
+			Kind: "secret",
 		},
 		{
-			Kind:     "secret",
+			Kind: "secret",
 		},
 	}
 
