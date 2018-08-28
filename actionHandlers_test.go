@@ -10,11 +10,11 @@ func TestFindActionHandler(t *testing.T) {
 	var handler func(chan bool, []Dep, Perform) int
 
 	handler = findActionHandler("git")
-	functionEqual(t, gitActionHandler, handler)
+	assert.Equal(t, reflect.ValueOf(gitActionHandler), reflect.ValueOf(handler))
 	handler = findActionHandler("secret")
-	functionEqual(t, secretesActionHandler, handler)
+	assert.Equal(t, reflect.ValueOf(secretesActionHandler), reflect.ValueOf(handler))
 	handler = findActionHandler("other")
-	functionEqual(t, defaultActionHandler, handler)
+	assert.Equal(t, reflect.ValueOf(defaultActionHandler), reflect.ValueOf(handler))
 }
 
 func TestGitHandlerClone(t *testing.T) {
@@ -120,10 +120,4 @@ func TestSecretsHandler(t *testing.T) {
 
 	assert.Equal(t, 2, n)
 	assert.Equal(t, 2, called)
-}
-
-func functionEqual(t *testing.T,
-	expected func(chan bool, []Dep, Perform) int,
-	actual func(chan bool, []Dep, Perform) int) {
-	assert.Equal(t, reflect.ValueOf(expected), reflect.ValueOf(actual))
 }

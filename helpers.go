@@ -14,17 +14,19 @@ func depInjDefaultAction() func(chan<- bool, Dep, Perform) {
 		if mockDefaultAction != nil {
 			return mockDefaultAction
 		} else {
-			return func(complete chan<- bool, dep Dep, perform Perform) {
-				fmt.Println("Fallback mockDefaultAction")
-				fmt.Println("Should mock out for:")
-				fmt.Println(dep, perform)
-				// TODO: Setup a strict env var, and fail here
-				os.Exit(-1)
-				complete <- true
-			}
+			return placeholderDefaultActionMock
 		}
 	}
 	return defaultAction
+}
+
+func placeholderDefaultActionMock(complete chan<- bool, dep Dep, perform Perform) {
+	fmt.Println("Fallback mockDefaultAction")
+	fmt.Println("Should mock out for:")
+	fmt.Println(dep, perform)
+	// TODO: Setup a strict env var, and fail here
+	//os.Exit(-1)
+	complete <- true
 }
 
 func isTesting() bool {
