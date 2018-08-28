@@ -9,6 +9,7 @@ import (
 
 /// *** Actions *** ///
 
+var execCommand = exec.Command
 func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 
 	mustachedActionParams := templateParams(dep, perform)
@@ -17,11 +18,12 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 		fmt.Println("Dry run of: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
 	} else {
 		fmt.Println("Running: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
-		command := perform.Kind + " " + strings.Join(mustachedActionParams, " ")
-		cmd := exec.Command(perform.Kind, mustachedActionParams...)
+		cmd := execCommand(perform.Kind, mustachedActionParams...)
 		cmd.Dir = dep.Location
 		//TODO: Find a way to "stream" output to terminal?
 		out, err := cmd.CombinedOutput()
+
+		command := perform.Kind + " " + strings.Join(mustachedActionParams, " ")
 		checkOkay(command, out, err) //Combines errors to output
 		//out, err := cmd.Output() // just stdout
 	}
@@ -30,8 +32,13 @@ func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
 }
 
 /// ***  Helpers *** ///
-
+var checkOkayIntercept func(command string, out []byte, err error)
 func checkOkay(command string, out []byte, err error) {
+	if checkOkayIntercept != nil {
+		checkOkayIntercept(command, out, err)
+		return
+	}
+
 	if err != nil {
 		fmt.Println("Command finished with error: ", err)
 		fmt.Println(command)

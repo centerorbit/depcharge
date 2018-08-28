@@ -70,13 +70,9 @@ func main() {
 
 	n := handler(complete, labelFiltered, perform)
 
-	// In the case we run parallel, block until all goroutines signify completed.
 	if !perform.Serial {
-		for i := 0; i < n; i++ {
-			<-complete
-		}
+		drainChannel(n, complete)
 	}
-
 
 	fmt.Println("depcharge complete!")
 }

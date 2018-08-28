@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/integrii/flaggy"
+	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
 )
@@ -24,17 +25,51 @@ const COVER_LIMIT = 0.8
 //	os.Exit(rc)
 //}
 
-func TestDepMain(t *testing.T) {
-	oldArgs := os.Args
+
+var oldArgs []string
+func TestDepMainDryRun(t *testing.T) {
+	oldArgs = os.Args
+	defer flaggy.ResetParser()
+	defer func(){ os.Args = oldArgs }()
+	defer func(){ mockDefaultAction = nil }()
+
+	called := 0
+	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
+		assert.Equal(t, "go", perform.Kind)
+		assert.True(t, perform.Force)
+		assert.True(t, perform.DryRun)
+		assert.Equal(t, "get", perform.Action[0])
+		assert.Equal(t, "{{get}}", perform.Action[1])
+		called ++
+		complete <- true
+	}
+
 
 	os.Args = []string{"", "--kind=go", "--force", "--dryrun", "--", "get", "{{get}}"}
 	main()
 
-	flaggy.ResetParser()
+	assert.Equal(t, 3, called)
+}
+
+func TestDepMainForce(t *testing.T) {
+	oldArgs = os.Args
+	defer flaggy.ResetParser()
+	defer func(){os.Args = oldArgs}()
+	defer func(){ mockDefaultAction = nil }()
+
+	called := 0
+	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
+		assert.Equal(t, "go", perform.Kind)
+		assert.True(t, perform.Force)
+		assert.False(t, perform.DryRun)
+		assert.Equal(t, "get", perform.Action[0])
+		assert.Equal(t, "{{get}}", perform.Action[1])
+		called ++
+		complete <- true
+	}
 
 	os.Args = []string{"", "--force", "--", "go", "get", "{{get}}"}
 	main()
 
-	os.Args = oldArgs
-	flaggy.ResetParser()
+	assert.Equal(t, 3, called)
 }
