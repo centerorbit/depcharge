@@ -38,7 +38,7 @@ test:
     - init
   coverage: '/coverage: \d+\.\d+\%/'
   variables:
-    COVER_STRICT: true
+    COVER_STRICT: "true"
   script:
     - export GOPATH=$(pwd)
     - go test -coverprofile=c.out
