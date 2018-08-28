@@ -8,13 +8,25 @@ import (
 	"strings"
 )
 
+var mockDefaultAction func(chan<- bool, Dep, Perform)
 func depInjDefaultAction() func(chan<- bool, Dep, Perform) {
 	if isTesting() {
-		return func(complete chan<- bool, dep Dep, perform Perform) {
-			fmt.Println("Mock defaultAction")
+		if mockDefaultAction != nil {
+			return mockDefaultAction
+		} else {
+			return placeholderDefaultActionMock
 		}
 	}
 	return defaultAction
+}
+
+func placeholderDefaultActionMock(complete chan<- bool, dep Dep, perform Perform) {
+	fmt.Println("Fallback mockDefaultAction")
+	fmt.Println("Should mock out for:")
+	fmt.Println(dep, perform)
+	// TODO: Setup a strict env var, and fail here
+	//os.Exit(-1)
+	complete <- true
 }
 
 func isTesting() bool {
@@ -23,6 +35,13 @@ func isTesting() bool {
 	}
 
 	return true
+}
+
+func drainChannel(muchness int, toDrain <-chan bool){
+	// In the case we run parallel, block until all goroutines signify completed.
+	for i := 0; i < muchness; i++ {
+		<-toDrain
+	}
 }
 
 // exists returns whether the given file or directory exists or not

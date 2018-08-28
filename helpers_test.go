@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"reflect"
 	"testing"
 )
 
@@ -17,6 +18,16 @@ func TestExists(t *testing.T) {
 	assert.False(t, does)
 }
 
+func TestDepInjDefaultAction(t *testing.T) {
+	result := depInjDefaultAction()
+	assert.Equal(t, reflect.ValueOf(placeholderDefaultActionMock), reflect.ValueOf(result))
+
+	complete := make(chan bool, 1)
+	fmt.Println("The following errors can be ignored:")
+	result(complete,Dep{},Perform{})
+	fmt.Println("Okay, resume caring about errors.")
+	<-complete
+}
 
 func TestAskForConfirmationYes(t *testing.T) {
 

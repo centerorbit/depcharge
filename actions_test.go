@@ -2,10 +2,72 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/stretchr/testify/assert"
+	"os"
+	"os/exec"
 	"strings"
 	"testing"
 )
+
+
+// Thanks to: https://npf.io/2015/06/testing-exec-command/
+//    and: https://github.com/golang/go/blob/master/src/os/exec/exec_test.go#L31
+func fakeExecCommand(command string, args...string) *exec.Cmd {
+	fmt.Println("Hit fake Exec with", command, args)
+	cs := []string{"-test.run=TestHelperProcess", "--", command}
+	cs = append(cs, args...)
+	cmd := exec.Command(os.Args[0], cs...)
+	cmd.Env = []string{"GO_WANT_HELPER_PROCESS=1"}
+	return cmd
+}
+
+func TestDefaultAction(t *testing.T) {
+	fmt.Println("Begin testing default action")
+	execCommand = fakeExecCommand
+	defer func(){
+		execCommand = exec.Command
+		checkOkayIntercept = nil
+	}()
+
+	checkOkayIntercept = func(command string, out []byte, err error){
+		assert.Equal(t, "git status", command)
+		assert.Nil(t, err)
+		fmt.Println(string(out))
+		assert.Equal(t, "TestHelperProcess, intercepting exec.Command", string(out))
+	}
+
+	complete := make(chan bool, 1)
+
+	dep := Dep{
+		Kind:     "git",
+		Name:     "depcharge",
+		Location: "./",
+	}
+
+	perform := Perform{
+		Kind: "git",
+		Action: []string{"status"},
+	}
+
+	defaultAction(complete, dep, perform)
+	<-complete
+
+	fmt.Println("Done testing default action")
+
+}
+
+func TestHelperProcess(t *testing.T){
+	if os.Getenv("GO_WANT_HELPER_PROCESS") != "1" {
+		return
+	}
+
+	fmt.Fprint(os.Stdout, "TestHelperProcess, intercepting exec.Command")
+	// some code here to check arguments perhaps?
+	//fmt.Fprint(os.Stdout, os.Args)
+	os.Exit(0)
+}
+
 
 func TestTemplateParams(t *testing.T) {
 

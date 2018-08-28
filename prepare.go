@@ -46,13 +46,6 @@ const HelpText = "Usage: depcharge [--kind=<kind>] [--instead=<action>] [--label
 	"      deps: \n" +
 	"        - name: lumen \n" +
 	"          kind: composer \n" +
-	"" +
-	"\n\n" +
-	"Primary Commands: \n" +
-	"--kind		Is the top-level filter that's applied, opperations are run based on 'kind' \n" +
-	"			if --kind is not specified, then the first COMMAND/ARG is used \n" +
-	"--instead	Is used to specify a command you'd like to run against --kind, but is not 'kind'. \n" +
-	"--labels	Comma separated list of labels to filter by, inherited from parents \n" +
 	"\n" +
 	"Example commands:" +
 	"\n" +
@@ -76,26 +69,30 @@ func processArgs() Perform {
 	var perform Perform
 
 	// Define, grab, and parse our args.
-	kind := ""
-	flaggy.String(&kind, "k", "kind", "Targets specific kinds of dependencies (i.e. git, npm, composer)")
-
-	instead := ""
-	flaggy.String(&instead, "x", "instead", "Instead of 'kind', perform a different command.")
-
-	labels := ""
-	flaggy.String(&labels, "l", "labels", "Filters to specific labels.")
+	dryRun := false
+	flaggy.Bool(&dryRun, "d", "dryrun", "Will print out the command to be run, does not make changes to your system.")
 
 	exclusive := false
 	flaggy.Bool(&exclusive, "e", "exclusive", "Applies labels in an exclusive way (default).")
 
+	force := false
+	flaggy.Bool(&force, "f", "force", "Will force-run a command without confirmations, could be dangerous.")
+
 	inclusive := false
 	flaggy.Bool(&inclusive, "i", "inclusive", "Applies labels in an inclusive way.")
 
-	dryRun := false
-	flaggy.Bool(&dryRun, "d", "dryrun", "Will print out the command to be run, does not make changes to your system.")
+	kind := ""
+	flaggy.String(&kind, "k", "kind", "Targets specific kinds of dependencies (i.e. git, npm, composer)")
 
-	force := false
-	flaggy.Bool(&force, "f", "force", "Will force-run a command without confirmations, could be dangerous.")
+	labels := ""
+	flaggy.String(&labels, "l", "labels", "Filters to specific labels.")
+
+	serial := false
+	flaggy.Bool(&serial, "s", "serial", "Prevents parallel execution, runs commands one at a time.")
+
+	instead := ""
+	flaggy.String(&instead, "x", "instead", "Instead of 'kind', perform a different command.")
+
 
 
 	flaggy.SetDescription(" a tool designed to help orchestrate the execution of commands across many directories at once.")
@@ -131,6 +128,7 @@ func processArgs() Perform {
 	perform.Instead = instead
 	perform.Labels = labels
 	perform.Exclusive = exclusive
+	perform.Serial = serial
 	perform.DryRun = dryRun
 	perform.Force = force
 
