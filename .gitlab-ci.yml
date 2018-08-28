@@ -101,7 +101,7 @@ build-win:
     GOARCH: "amd64"
   script:
     - export GOPATH=$(pwd)
-    - set /p VERSION=<VERSION.txt
+    - export VERSION=$(cat VERSION.txt)
     - go build -a -ldflags="-w -s -X main.version=$VERSION" .
   artifacts:
     expire_in: 1 week
