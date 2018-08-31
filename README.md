@@ -8,7 +8,7 @@
 
 
 
-DepCharge is a tool designed to help orchestrate the execution of commands across many directories at once. It also proves to provide an excellent mechanism for self-documenting a project's vast (and often disparate) dependencies.
+DepCharge is a tool that helps orchestrate the execution of commands across the many dependencies and directories in larger projects. It also provides an excellent mechanism for self-documenting a project's vast (and often disparate) dependencies.
 
 **Sneak peek:**
 
