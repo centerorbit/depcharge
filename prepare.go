@@ -112,7 +112,15 @@ func processArgs() Perform {
 	if kind == "" && len(action) == 0 {
 		flaggy.ShowHelpAndExit("\n ERROR: You must provide at least a '--kind' or one ARG.")
 	}
-	if kind == "" && len(action) >= 1 {
+
+
+	if len(action) >= 1 && kind == action[0] {
+		// If kind is the same as action, just use it once
+		perform.Kind = kind
+		perform.Action = action[1:]
+	} else if kind == "" && len(action) >= 1 {
+		// If kind isn't set, look at the first arg, and use that instead
+
 		// First, grab the action (ie up, or build)
 		perform.Kind = action[0]
 		//Trim off the first action, so that it doesn't get loop-added by the deps
