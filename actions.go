@@ -11,7 +11,7 @@ import (
 
 var execCommand = exec.Command
 
-func defaultAction(complete chan<- bool, dep Dep, perform Perform) {
+func defaultAction(complete chan<- bool, dep dep, perform perform) {
 
 	mustachedActionParams := templateParams(dep, perform)
 
@@ -53,7 +53,7 @@ func checkOkay(command string, out []byte, err error) {
 	}
 }
 
-func templateParams(dep Dep, perform Perform) []string {
+func templateParams(dep dep, perform perform) []string {
 	// Adding kind, name, and location to possible template params
 	if dep.Params == nil {
 		dep.Params = map[string]string{}

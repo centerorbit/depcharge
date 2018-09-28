@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func findActionHandler(kind string) func(chan bool, []Dep, Perform) int {
+func findActionHandler(kind string) func(chan bool, []dep, perform) int {
 	switch kind {
 	case "git":
 		return gitActionHandler
@@ -18,7 +18,7 @@ func findActionHandler(kind string) func(chan bool, []Dep, Perform) int {
 
 /// *** Action Handlers *** ///
 
-func defaultActionHandler(complete chan bool, deps []Dep, perform Perform) int {
+func defaultActionHandler(complete chan bool, deps []dep, perform perform) int {
 	performAction := depInjDefaultAction()
 
 	n := 0
@@ -34,7 +34,7 @@ func defaultActionHandler(complete chan bool, deps []Dep, perform Perform) int {
 	return n
 }
 
-func gitActionHandler(complete chan bool, deps []Dep, perform Perform) int {
+func gitActionHandler(complete chan bool, deps []dep, perform perform) int {
 	performAction := depInjDefaultAction()
 
 	n := 0
@@ -68,7 +68,7 @@ func gitActionHandler(complete chan bool, deps []Dep, perform Perform) int {
 }
 
 // TODO: make a special handler for secrets
-func secretesActionHandler(complete chan bool, deps []Dep, perform Perform) int {
+func secretesActionHandler(complete chan bool, deps []dep, perform perform) int {
 	performAction := depInjDefaultAction()
 
 	n := 0

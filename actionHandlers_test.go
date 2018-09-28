@@ -7,7 +7,7 @@ import (
 )
 
 func TestFindActionHandler(t *testing.T) {
-	var handler func(chan bool, []Dep, Perform) int
+	var handler func(chan bool, []dep, perform) int
 
 	handler = findActionHandler("git")
 	assert.Equal(t, reflect.ValueOf(gitActionHandler), reflect.ValueOf(handler))
@@ -23,7 +23,7 @@ func TestGitHandlerClone(t *testing.T) {
 	}()
 
 	called := 0
-	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
+	mockDefaultAction = func(complete chan<- bool, dep dep, perform perform) {
 		assert.Equal(t, "git", dep.Kind)
 		assert.Equal(t, "clone", perform.Action[0])
 		assert.Equal(t, "source", perform.Action[1])
@@ -33,12 +33,12 @@ func TestGitHandlerClone(t *testing.T) {
 		complete <- true
 	}
 
-	perform := Perform{
+	perform := perform{
 		Action: []string{"clone", "source", "location"},
 		DryRun: true,
 	}
 
-	deps := []Dep{
+	deps := []dep{
 		{
 			Kind: "git",
 		},
@@ -59,7 +59,7 @@ func TestGitHandlerStatus(t *testing.T) {
 	}()
 
 	called := 0
-	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
+	mockDefaultAction = func(complete chan<- bool, dep dep, perform perform) {
 		assert.Equal(t, "git", dep.Kind)
 		assert.Equal(t, "status", perform.Action[0])
 		assert.False(t, perform.DryRun)
@@ -67,11 +67,11 @@ func TestGitHandlerStatus(t *testing.T) {
 		complete <- true
 	}
 
-	perform := Perform{
+	perform := perform{
 		Action: []string{"status"},
 	}
 
-	deps := []Dep{
+	deps := []dep{
 		{
 			Kind: "git",
 		},
@@ -90,7 +90,7 @@ func TestSecretsHandler(t *testing.T) {
 	defer func() { mockDefaultAction = nil }()
 
 	called := 0
-	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
+	mockDefaultAction = func(complete chan<- bool, dep dep, perform perform) {
 		assert.Equal(t, "secret", dep.Kind)
 		assert.Equal(t, "doesn't", perform.Action[0])
 		assert.Equal(t, "matter", perform.Action[1])
@@ -98,12 +98,12 @@ func TestSecretsHandler(t *testing.T) {
 		complete <- true
 	}
 
-	perform := Perform{
+	perform := perform{
 		Action: []string{"doesn't", "matter", "...yet"},
 		DryRun: true,
 	}
 
-	deps := []Dep{
+	deps := []dep{
 		{
 			Kind: "secret",
 		},

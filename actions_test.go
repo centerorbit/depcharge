@@ -38,13 +38,13 @@ func TestDefaultAction(t *testing.T) {
 
 	complete := make(chan bool, 1)
 
-	dep := Dep{
+	dep := dep{
 		Kind:     "git",
 		Name:     "depcharge",
 		Location: "./",
 	}
 
-	perform := Perform{
+	perform := perform{
 		Kind:   "git",
 		Action: []string{"status"},
 	}
@@ -69,13 +69,13 @@ func TestHelperProcess(t *testing.T) {
 
 func TestTemplateParams(t *testing.T) {
 
-	dep := Dep{
+	dep := dep{
 		Kind:     "git",
 		Name:     "depcharge",
 		Location: "./",
 	}
 
-	perform := Perform{
+	perform := perform{
 		Action: []string{
 			"To {{kind}}, or",
 			"{{name}},",
