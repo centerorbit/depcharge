@@ -30,3 +30,7 @@ deps:
       kind: go
       params:
         get: github.com/stretchr/testify
+    - name: cli-flags
+      kind: go
+      params:
+        get: github.com/integrii/flaggy

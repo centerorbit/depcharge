@@ -58,7 +58,7 @@ func TestDepMainDryRun(t *testing.T) {
 	os.Args = []string{"", "--kind=go", "--force", "--dryrun", "--", "get", "{{get}}"}
 	main()
 
-	assert.Equal(t, 3, called)
+	assert.Equal(t, 4, called)
 }
 
 func TestDepMainForce(t *testing.T) {
@@ -81,5 +81,5 @@ func TestDepMainForce(t *testing.T) {
 	os.Args = []string{"", "--force", "--", "go", "get", "{{get}}"}
 	main()
 
-	assert.Equal(t, 3, called)
+	assert.Equal(t, 4, called)
 }
