@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-const COVER_LIMIT = 0.8
+const CoverLimit = 0.8
 
 func TestMain(m *testing.M) {
 	// call flag.Parse() here if TestMain uses flags
@@ -25,8 +25,8 @@ func TestMain(m *testing.M) {
 		}
 
 		if strict {
-			if c < COVER_LIMIT {
-				fmt.Println("Tests passed but coverage was below ", COVER_LIMIT*100, "%")
+			if c < CoverLimit {
+				fmt.Println("Tests passed but coverage was below ", CoverLimit*100, "%")
 				rc = -1
 			} else {
 				fmt.Println("Strict coverage passed!")
@@ -45,7 +45,7 @@ func TestDepMainDryRun(t *testing.T) {
 	defer func() { mockDefaultAction = nil }()
 
 	called := 0
-	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
+	mockDefaultAction = func(complete chan<- bool, dep dep, perform perform) {
 		assert.Equal(t, "go", perform.Kind)
 		assert.True(t, perform.Force)
 		assert.True(t, perform.DryRun)
@@ -68,7 +68,7 @@ func TestDepMainForce(t *testing.T) {
 	defer func() { mockDefaultAction = nil }()
 
 	called := 0
-	mockDefaultAction = func(complete chan<- bool, dep Dep, perform Perform) {
+	mockDefaultAction = func(complete chan<- bool, dep dep, perform perform) {
 		assert.Equal(t, "go", perform.Kind)
 		assert.True(t, perform.Force)
 		assert.False(t, perform.DryRun)

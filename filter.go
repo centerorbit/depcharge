@@ -8,13 +8,13 @@ import (
 )
 
 /**
-Flattens MergeDeps into a single-level array, and appends that onto DepList
+Flattens MergeDeps into a single-level array, and appends that onto depList
 This is due to YAML limitations:
 	// Step 0: Flatten merge-deps with deps. Because YAML doesn't support merging sequences:
 	//  http://yaml4r.sourceforge.net/doc/page/collections_in_yaml.htm
 	// 	https://stackoverflow.com/a/30770740/663058
 */
-func flatten(deps []Dep) []Dep {
+func flatten(deps []dep) []dep {
 	//Go through all of the deps, and check if they need flattening.
 	for key, dep := range deps {
 
@@ -36,12 +36,12 @@ func flatten(deps []Dep) []Dep {
 }
 
 /**
-Flattens the Dep YAML
+Flattens the dep YAML
 	dep.Labels are inherited
 	dep.Location is expanded
 */
-func unwrap(deps []Dep, baseDir string, labels []string) []Dep {
-	var foundDeps []Dep
+func unwrap(deps []dep, baseDir string, labels []string) []dep {
+	var foundDeps []dep
 	for _, dep := range deps {
 		dep.Location = filepath.Clean(baseDir + dep.Location)
 		dep.Labels = append(dep.Labels, labels...) // Inherit labels
@@ -59,8 +59,8 @@ func unwrap(deps []Dep, baseDir string, labels []string) []Dep {
 /**
 Filters out to just a kind
 */
-func applyFilterKind(deps []Dep, kind string) []Dep {
-	var foundDeps []Dep
+func applyFilterKind(deps []dep, kind string) []dep {
+	var foundDeps []dep
 	for _, dep := range deps {
 		if dep.Kind != "" && dep.Kind == kind {
 			foundDeps = append(foundDeps, dep)
@@ -74,7 +74,7 @@ func applyFilterKind(deps []Dep, kind string) []Dep {
 Applies filters
 Splits comma separated
 */
-func applyFilterLabel(deps []Dep, perform Perform) []Dep {
+func applyFilterLabel(deps []dep, perform perform) []dep {
 	if perform.Labels == "" {
 		fmt.Println("Warning: No labels, using all deps of kind.")
 
@@ -88,7 +88,7 @@ func applyFilterLabel(deps []Dep, perform Perform) []Dep {
 
 	labels := strings.Split(perform.Labels, ",")
 
-	var foundDeps []Dep
+	var foundDeps []dep
 	for _, dep := range deps { // Cycle through all of the deps
 
 		var match bool

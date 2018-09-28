@@ -5,21 +5,21 @@ import (
 	"path/filepath"
 )
 
-type Dep struct {
+type dep struct {
 	Name      string            `json:"name"`
 	Kind      string            `json:"kind"`
 	Location  string            `json:"location"`
-	MergeDeps [][]Dep           `json:"merge-deps"`
-	DepList   []Dep             `json:"deps"`
+	MergeDeps [][]dep           `json:"merge-deps"`
+	DepList   []dep             `json:"deps"`
 	Labels    []string          `json:"labels"`
 	Params    map[string]string `json:"params"`
 }
 
-type DepList struct {
-	Deps []Dep `json:"deps"`
+type depList struct {
+	Deps []dep `json:"deps"`
 }
 
-type Perform struct {
+type perform struct {
 	Kind      string
 	Instead   string
 	Labels    string

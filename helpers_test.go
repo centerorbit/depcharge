@@ -24,7 +24,7 @@ func TestDepInjDefaultAction(t *testing.T) {
 
 	complete := make(chan bool, 1)
 	fmt.Println("The following errors can be ignored:")
-	result(complete, Dep{}, Perform{})
+	result(complete, dep{}, perform{})
 	fmt.Println("Okay, resume caring about errors.")
 	<-complete
 }

@@ -8,20 +8,20 @@ import (
 	"strings"
 )
 
-var mockDefaultAction func(chan<- bool, Dep, Perform)
+var mockDefaultAction func(chan<- bool, dep, perform)
 
-func depInjDefaultAction() func(chan<- bool, Dep, Perform) {
+func depInjDefaultAction() func(chan<- bool, dep, perform) {
 	if isTesting() {
 		if mockDefaultAction != nil {
 			return mockDefaultAction
-		} else {
-			return placeholderDefaultActionMock
 		}
+
+		return placeholderDefaultActionMock
 	}
 	return defaultAction
 }
 
-func placeholderDefaultActionMock(complete chan<- bool, dep Dep, perform Perform) {
+func placeholderDefaultActionMock(complete chan<- bool, dep dep, perform perform) {
 	fmt.Println("Fallback mockDefaultAction")
 	fmt.Println("Should mock out for:")
 	fmt.Println(dep, perform)
@@ -57,7 +57,7 @@ func exists(path string) (bool, error) {
 	return true, err
 }
 
-//func dumpStruct(depList []Dep) string {
+//func dumpStruct(depList []dep) string {
 //	fmt.Println("Dumping JSON:")
 //	newYaml, _ := yaml.Marshal(depList)
 //	newJson, _ := yaml.YAMLToJSON(newYaml)

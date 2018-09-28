@@ -8,15 +8,15 @@ import (
 
 func TestUnwrap(t *testing.T) {
 
-	var deps []Dep
+	var deps []dep
 	var labels []string
-	var foundDeps []Dep
+	var foundDeps []dep
 
 	// Test if nothing is okay
 	foundDeps = unwrap(deps, "", labels)
 	assert.Empty(t, foundDeps)
 
-	testDep := Dep{
+	testDep := dep{
 		Name:     "sample",
 		Kind:     "git",
 		Location: "sample",
@@ -31,17 +31,17 @@ func TestUnwrap(t *testing.T) {
 	assert.Equal(t, deps, foundDeps)
 
 	//Making a nest
-	testDep = Dep{
+	testDep = dep{
 		Name:     "parent",
 		Kind:     "git",
 		Location: "parent-dir",
-		DepList: []Dep{
+		DepList: []dep{
 			{
 				Name:     "child",
 				Kind:     "git",
 				Location: "child-dir",
 				Labels:   []string{"first"},
-				DepList: []Dep{
+				DepList: []dep{
 					{
 						Name:     "grandchild",
 						Kind:     "git",
@@ -77,7 +77,7 @@ func TestUnwrap(t *testing.T) {
 }
 
 func TestApplyFilterKind(t *testing.T) {
-	testDeps := []Dep{
+	testDeps := []dep{
 		{
 			Labels: nil,
 		},
@@ -92,7 +92,7 @@ func TestApplyFilterKind(t *testing.T) {
 		},
 	}
 
-	perform := Perform{
+	perform := perform{
 		Labels:    "",
 		Exclusive: false,
 		Force:     true,
@@ -127,7 +127,7 @@ func TestApplyFilterKind(t *testing.T) {
 }
 
 func TestApplyFilterLabel(t *testing.T) {
-	testDeps := []Dep{
+	testDeps := []dep{
 		{
 			Kind: "git",
 		},
@@ -156,10 +156,10 @@ func TestIsExclusive(t *testing.T) {
 	what := []string{"one", "two"} // dep.labels
 	against := []string{"one"}     // labels
 
-	// Dep does have "one"
+	// dep does have "one"
 	assert.True(t, isExclusive(what, against))
 
-	// Dep does not have "three"
+	// dep does not have "three"
 	against = []string{"one", "three"} // labels
 	assert.False(t, isExclusive(what, against))
 
@@ -180,14 +180,14 @@ func TestIsInclusive(t *testing.T) {
 	what := []string{"one", "two"} // dep.labels
 	against := []string{"one"}     // labels
 
-	// Dep does have "one"
+	// dep does have "one"
 	assert.True(t, isInclusive(what, against))
 
-	// Dep does not have "three", but does have "one"
+	// dep does not have "three", but does have "one"
 	against = []string{"one", "three"} // labels
 	assert.True(t, isInclusive(what, against))
 
-	// Dep does not have "four"
+	// dep does not have "four"
 	against = []string{"four"} // labels
 	assert.False(t, isInclusive(what, against))
 

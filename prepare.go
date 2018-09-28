@@ -10,7 +10,7 @@ import (
 
 var version string
 
-const HelpText = "Usage: depcharge [--kind=<kind>] [--instead=<action>] [--labels=<comma-separated,inherited>] [OPTIONS...] -- [COMMAND/ARGS...]" +
+const helpText = "Usage: depcharge [--kind=<kind>] [--instead=<action>] [--labels=<comma-separated,inherited>] [OPTIONS...] -- [COMMAND/ARGS...]" +
 	"\n\n" +
 	"Features:" +
 	"\n" +
@@ -62,10 +62,10 @@ const HelpText = "Usage: depcharge [--kind=<kind>] [--instead=<action>] [--label
 	"Will run `composer install` across any composer dependencies that have either the label 'api', or 'soap': \n" +
 	"	depcharge --inclusive --labels=api,soap -- composer install"
 
-func processArgs() Perform {
+func processArgs() perform {
 	flaggy.SetVersion(version)
 
-	var perform Perform
+	var perform perform
 
 	// Define, grab, and parse our args.
 	dryRun := false
@@ -97,7 +97,7 @@ func processArgs() Perform {
 	flaggy.DefaultParser.AdditionalHelpPrepend = "\n" +
 		"Use -- to separate depcharge commands from intended execution commands."
 
-	flaggy.DefaultParser.AdditionalHelpAppend = HelpText
+	flaggy.DefaultParser.AdditionalHelpAppend = helpText
 
 	flaggy.Parse()
 	action := flaggy.TrailingArguments
@@ -112,7 +112,6 @@ func processArgs() Perform {
 	if kind == "" && len(action) == 0 {
 		flaggy.ShowHelpAndExit("\n ERROR: You must provide at least a '--kind' or one ARG.")
 	}
-
 
 	if len(action) >= 1 && kind == action[0] {
 		// If kind is the same as action, just use it once
@@ -140,7 +139,7 @@ func processArgs() Perform {
 	return perform
 }
 
-func load() DepList {
+func load() depList {
 	// Read in our YAML file.
 	yamlFile, err := ioutil.ReadFile("dep.yml")
 	if err != nil {
@@ -149,7 +148,7 @@ func load() DepList {
 	}
 
 	// Unmarshal the YAML into a struct.
-	var depList DepList
+	var depList depList
 	err = yaml.Unmarshal(yamlFile, &depList)
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
