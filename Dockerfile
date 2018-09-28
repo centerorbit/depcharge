@@ -7,7 +7,9 @@ RUN apk update \
 COPY . /go/src/depcharge
 WORKDIR /go/src/depcharge
 
-RUN go get -t ./...
+RUN go get ./...
+RUN go build
+RUN ./depcharge -f -- go get {{get}}
 
 RUN go test .
 RUN go build -ldflags="-w -s -X main.version=$VERSION" .
