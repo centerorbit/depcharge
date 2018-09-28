@@ -113,7 +113,6 @@ func processArgs() Perform {
 		flaggy.ShowHelpAndExit("\n ERROR: You must provide at least a '--kind' or one ARG.")
 	}
 
-
 	if len(action) >= 1 && kind == action[0] {
 		// If kind is the same as action, just use it once
 		perform.Kind = kind
