@@ -192,5 +192,4 @@ pages:
     paths:
       - public
   only:
-    - static-site
-#   - master
+    - master
