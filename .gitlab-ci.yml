@@ -37,7 +37,7 @@ init:
 
 
 test:
-  image: golang:1.10-alpine
+  image: golang:1.10-stretch
   stage: test
   dependencies:
     - init
