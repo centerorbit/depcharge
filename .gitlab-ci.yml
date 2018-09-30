@@ -181,7 +181,7 @@ release:
 
 
 pages:
-  stage: deploy
+  stage: release
   script:
   - echo 'Nothing to do...'
   artifacts:
