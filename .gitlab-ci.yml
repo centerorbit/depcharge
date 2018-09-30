@@ -1,3 +1,5 @@
+image: alpine:latest
+
 stages:
   - init
   - test
@@ -174,4 +176,20 @@ release:
     - php /var/code/uploadBinary.php
   only:
     - tags
+    - master
+
+
+
+pages:
+  image: alpine:latest
+  stage: release
+  dependencies:
+    - test
+  script:
+    - mkdir public
+    - mv coverage.html public/index.html
+  artifacts:
+    paths:
+      - public
+  only:
     - master
