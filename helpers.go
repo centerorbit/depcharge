@@ -57,9 +57,9 @@ func exists(path string) (bool, error) {
 	return true, err
 }
 
-//func dumpStruct(depList []dep) string {
+//func dumpStruct(DepList []dep) string {
 //	fmt.Println("Dumping JSON:")
-//	newYaml, _ := yaml.Marshal(depList)
+//	newYaml, _ := yaml.Marshal(DepList)
 //	newJson, _ := yaml.YAMLToJSON(newYaml)
 //	fmt.Println(string(newJson))
 //	return string(newJson)

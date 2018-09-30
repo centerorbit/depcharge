@@ -15,11 +15,11 @@ type dep struct {
 	Params    map[string]string `json:"params"`
 }
 
-type depList struct {
+type DepList struct {
 	Deps []dep `json:"deps"`
 }
 
-type Perform struct {
+type perform struct {
 	Kind      string
 	Instead   string
 	Labels    string
