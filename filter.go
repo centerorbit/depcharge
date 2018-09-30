@@ -8,7 +8,7 @@ import (
 )
 
 /**
-Flattens MergeDeps into a single-level array, and appends that onto DepList
+Flattens MergeDeps into a single-level array, and appends that onto depList
 This is due to YAML limitations:
 	// Step 0: Flatten merge-deps with deps. Because YAML doesn't support merging sequences:
 	//  http://yaml4r.sourceforge.net/doc/page/collections_in_yaml.htm

@@ -139,7 +139,7 @@ func processArgs() perform {
 	return perform
 }
 
-func load() DepList {
+func load() depList {
 	// Read in our YAML file.
 	yamlFile, err := ioutil.ReadFile("dep.yml")
 	if err != nil {
@@ -148,7 +148,7 @@ func load() DepList {
 	}
 
 	// Unmarshal the YAML into a struct.
-	var depList DepList
+	var depList depList
 	err = yaml.Unmarshal(yamlFile, &depList)
 	if err != nil {
 		fmt.Printf("err: %v\n", err)

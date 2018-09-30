@@ -15,7 +15,7 @@ type dep struct {
 	Params    map[string]string `json:"params"`
 }
 
-type DepList struct {
+type depList struct {
 	Deps []dep `json:"deps"`
 }
 
