@@ -45,7 +45,7 @@ test:
   variables:
     COVER_STRICT: "true"
   script:
-    -> # Test for gofmt smells
+    - > # Test for gofmt smells
       if [[ $(gofmt -s -d *.go) ]]; then
         gofmt -s -d *.go
         echo "gofmt changes detected"
