@@ -11,9 +11,9 @@ init:
   stage: init
   cache:
     paths:
-    - bin/
-    - pkg/
-    - src/
+      - bin/
+      - pkg/
+      - src/
   script:
     - mkdir -p bin
     - . ./scripts/set-env.sh
@@ -45,7 +45,17 @@ test:
   variables:
     COVER_STRICT: "true"
   script:
+    -> # Test for gofmt smells
+    if [[ $(gofmt -s -d *.go) ]]; then
+      gofmt -s -d *.go
+      echo "gofmt changes detected"
+      exit -1
+    fi
+
+    # Test for golint smells
     - ./bin/golint -set_exit_status
+
+    # Generate code coverage report
     - . ./scripts/create-coverage.sh
   artifacts:
     expire_in: 1 week
