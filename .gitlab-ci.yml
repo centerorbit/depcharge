@@ -46,11 +46,11 @@ test:
     COVER_STRICT: "true"
   script:
     -> # Test for gofmt smells
-    if [[ $(gofmt -s -d *.go) ]]; then
-      gofmt -s -d *.go
-      echo "gofmt changes detected"
-      exit -1
-    fi
+      if [[ $(gofmt -s -d *.go) ]]; then
+        gofmt -s -d *.go
+        echo "gofmt changes detected"
+        exit -1
+      fi
 
     # Test for golint smells
     - ./bin/golint -set_exit_status
