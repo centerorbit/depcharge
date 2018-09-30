@@ -34,3 +34,7 @@ deps:
       kind: go
       params:
         get: github.com/integrii/flaggy
+    - name: linting
+      kind: go
+      params:
+        get: golang.org/x/lint/golint
