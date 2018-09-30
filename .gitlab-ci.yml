@@ -181,12 +181,16 @@ release:
 
 
 pages:
+  image: alpine:latest
   stage: release
+  dependencies:
+    - test
   script:
-  - echo 'Nothing to do...'
+    - mkdir public
+    - mv coverage.html public/index.html
   artifacts:
     paths:
-    - coverage.html
+      - public
   only:
-  - static-site
-#  - master
+    - static-site
+#   - master
