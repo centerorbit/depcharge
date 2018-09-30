@@ -45,7 +45,7 @@ test:
   variables:
     COVER_STRICT: "true"
   script:
-    - golint -set_exit_status
+    - ./bin/golint -set_exit_status
     - . ./scripts/create-coverage.sh
   artifacts:
     expire_in: 1 week
