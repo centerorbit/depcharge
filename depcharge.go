@@ -19,7 +19,7 @@ type depList struct {
 	Deps []dep `json:"deps"`
 }
 
-type perform struct {
+type Perform struct {
 	Kind      string
 	Instead   string
 	Labels    string
