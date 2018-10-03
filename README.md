@@ -5,7 +5,7 @@
 [![GitHub license](https://img.shields.io/github/license/centerorbit/depcharge.svg)](https://github.com/centerorbit/depcharge/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/centerorbit/depcharge.svg)](https://github.com/centerorbit/depcharge/releases/latest)
 [![Maintainability](https://api.codeclimate.com/v1/badges/5ef8ce4f942696ebace7/maintainability)](https://codeclimate.com/github/centerorbit/depcharge/maintainability)
-
+<a href="https://github.com/avelino/awesome-go"><img src="https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg"></a>
 
 
 DepCharge is a tool that helps orchestrate the execution of commands across the many dependencies and directories in larger projects. It also provides an excellent mechanism for self-documenting a project's vast (and often disparate) dependencies.
