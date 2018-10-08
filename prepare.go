@@ -10,7 +10,7 @@ import (
 
 var version string
 
-const helpText = "Usage: depcharge [--kind=<kind>] [--instead=<action>] [--labels=<comma-separated,inherited>] [OPTIONS...] -- [COMMAND/ARGS...]" +
+const helpText = "Usage: depcharge [--labels=<comma-separated,inherited>] [OPTIONS...] -- [COMMAND/ARGS...]" +
 	"\n\n" +
 	"Features:" +
 	"\n" +
