@@ -35,6 +35,27 @@ init:
       - pkg/
       - src/
 
+gofmt:
+  image: golang:1.10-stretch
+  stage: test
+  dependencies:
+    - init
+  script:
+    - > # Test for gofmt smells
+      if [[ $(gofmt -s -d *.go) ]]; then
+        gofmt -s -d *.go
+        echo "gofmt changes detected"
+        exit -1
+      fi
+
+golint:
+  image: golang:1.10-stretch
+  stage: test
+  dependencies:
+    - init
+  script:
+    # Test for golint smells
+    - ./bin/golint -set_exit_status
 
 test:
   image: golang:1.10-stretch
@@ -45,16 +66,6 @@ test:
   variables:
     COVER_STRICT: "true"
   script:
-    - > # Test for gofmt smells
-      if [[ $(gofmt -s -d *.go) ]]; then
-        gofmt -s -d *.go
-        echo "gofmt changes detected"
-        exit -1
-      fi
-
-    # Test for golint smells
-    - ./bin/golint -set_exit_status
-
     # Generate code coverage report
     - . ./scripts/create-coverage.sh
   artifacts:
