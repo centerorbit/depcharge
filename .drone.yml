@@ -1,0 +1,109 @@
+kind: pipeline
+name: default
+
+steps:
+- name: init
+  image: golang:1-alpine
+  commands:
+    - apk update && apk add git
+    - mkdir -p bin
+    - . ./scripts/set-env.sh
+
+    - go get ./...
+    - go build -o depcharge
+    - ./depcharge -f -- go get {{get}}
+
+    - export VERSION=$(echo $CI_COMMIT| cut -c1-7)
+    - export VERSION=$(if [ -z $CI_TAG ]; then echo $VERSION ; else echo $CI_TAG.$VERSION; fi)
+    - echo -n $VERSION | tee VERSION.txt
+    - echo
+- name: gofmt
+  image: golang:1-stretch
+  commands:
+    # Test for gofmt smells
+    - >
+      bash -c '
+        if [[ $(gofmt -s -d *.go) ]]; then
+          gofmt -s -d *.go;
+          echo "gofmt changes detected";
+          exit -1;
+        fi
+      '
+
+- name: golint
+  image: golang:1-stretch
+  commands:
+    # Test for golint smells
+    - ./bin/golint -set_exit_status
+  depends_on:
+    - init
+
+
+- name: test
+  image: golang:1-stretch
+  environment:
+    COVER_STRICT: "true"
+  commands:
+    # Generate code coverage report
+    - . ./scripts/create-coverage.sh
+  depends_on:
+    - init
+
+- name: build-linux
+  image: golang:1-alpine
+  environment:
+    CGO_ENABLED: 0
+    GOOS: "linux"
+    GOARCH: "amd64"
+  commands:
+    - . ./scripts/set-env.sh
+    - export VERSION=$(cat VERSION.txt)
+    - if [ -n "${CI_TAG-}" ]; then export EXTRA_FLAGS="-w -s"; fi
+    - go build -ldflags="$EXTRA_FLAGS -X main.version=$VERSION" -o depcharge-linux .
+  depends_on:
+    - init
+    - gofmt
+    - golint
+    - test
+
+- name: build-mac
+  image: golang:1-alpine
+  environment:
+    CGO_ENABLED: 0
+    GOOS: "darwin"
+    GOARCH: "amd64"
+  commands:
+    - . ./scripts/set-env.sh
+    - export VERSION=$(cat VERSION.txt)
+    - if [ -n "${CI_TAG-}" ]; then export EXTRA_FLAGS="-w -s"; fi
+    - go build -ldflags="$EXTRA_FLAGS -X main.version=$VERSION" -o depcharge-linux .
+  depends_on:
+    - init
+    - gofmt
+    - golint
+    - test
+  when:
+    ref:
+      - refs/heads/master
+      - refs/tags/*
+
+- name: build-win
+  image: golang:1-alpine
+  environment:
+    CGO_ENABLED: 0
+    GOOS: "windows"
+    GOARCH: "amd64"
+  commands:
+    - . ./scripts/set-env.sh
+    - export VERSION=$(cat VERSION.txt)
+    - if [ -n "${CI_TAG-}" ]; then export EXTRA_FLAGS="-w -s"; fi
+    - go build -ldflags="$EXTRA_FLAGS -X main.version=$VERSION" -o depcharge-linux .
+  depends_on:
+    - init
+    - gofmt
+    - golint
+    - test
+  when:
+    ref:
+      - refs/heads/master
+      - refs/tags/*
