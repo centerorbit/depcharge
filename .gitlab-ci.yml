@@ -7,7 +7,7 @@ stages:
   - release
 
 init:
-  image: golang:1.10-alpine
+  image: golang:1-alpine
   stage: init
   cache:
     paths:
@@ -15,12 +15,12 @@ init:
       - pkg/
       - src/
   script:
+    - apk update && apk add git
     - mkdir -p bin
     - . ./scripts/set-env.sh
-    - apk update && apk add git
 
     - go get ./...
-    - go build
+    - go build -o depcharge
     - ./depcharge -f -- go get {{get}}
 
     - export VERSION=$(echo $CI_COMMIT_SHA| cut -c1-7)
@@ -36,10 +36,8 @@ init:
       - src/
 
 gofmt:
-  image: golang:1.10-stretch
+  image: golang:1-stretch
   stage: test
-  dependencies:
-    - init
   script:
     - > # Test for gofmt smells
       if [[ $(gofmt -s -d *.go) ]]; then
@@ -49,7 +47,7 @@ gofmt:
       fi
 
 golint:
-  image: golang:1.10-stretch
+  image: golang:1-stretch
   stage: test
   dependencies:
     - init
@@ -58,7 +56,7 @@ golint:
     - ./bin/golint -set_exit_status
 
 test:
-  image: golang:1.10-stretch
+  image: golang:1-stretch
   stage: test
   dependencies:
     - init
@@ -75,7 +73,7 @@ test:
 
 
 build-linux:
-  image: golang:1.10-alpine
+  image: golang:1-alpine
   stage: build
   dependencies:
     - init
@@ -94,7 +92,7 @@ build-linux:
       - depcharge-linux
 
 build-mac:
-  image: golang:1.10-alpine
+  image: golang:1-alpine
   stage: build
   dependencies:
     - init
@@ -115,7 +113,7 @@ build-mac:
     - master
 
 build-win:
-  image: golang:1.10-alpine
+  image: golang:1-alpine
   stage: build
   dependencies:
     - init
