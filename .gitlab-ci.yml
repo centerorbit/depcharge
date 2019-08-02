@@ -6,6 +6,13 @@ stages:
   - build
   - release
 
+cache:
+  paths:
+    - bin/
+    - pkg/
+    - src/
+  policy: pull
+
 init:
   image: golang:1-alpine
   stage: init
@@ -14,6 +21,7 @@ init:
       - bin/
       - pkg/
       - src/
+    policy: push
   script:
     - apk update && apk add git
     - mkdir -p bin
@@ -38,6 +46,7 @@ init:
 gofmt:
   image: golang:1-stretch
   stage: test
+  cache: {}
   script:
     - > # Test for gofmt smells
       if [[ $(gofmt -s -d *.go) ]]; then
@@ -156,12 +165,12 @@ build-win:
 release:
   image: registry.gitlab.com/centerorbit/release-github
   stage: release
+  cache: {}
   dependencies:
     - build-linux
     - build-mac
     - build-win
   variables:
-    # GIT_STRATEGY: none
     OWNER: "centerorbit"
     REPO: "depcharge"
     ACCESS_TOKEN: $GITHUB_ACCESS_TOKEN
@@ -179,25 +188,24 @@ release:
     - export UPLOAD_URL=$(php /var/code/createRelease.php)
 
     # Send Linux binary to GitHub 
-    - export RELEASE_NAME="linux-x64"
+    - export RELEASE_NAME="depcharge-linux-x64"
     - mv depcharge-linux depcharge
     - zip -m $RELEASE_NAME.zip depcharge
     - php /var/code/uploadBinary.php
 
     # Send Mac binary to GitHub 
-    - export RELEASE_NAME="mac-x64"
+    - export RELEASE_NAME="depcharge-mac-x64"
     - mv depcharge-mac depcharge
     - zip -m $RELEASE_NAME.zip depcharge
     - php /var/code/uploadBinary.php
 
     # Send Win binary to GitHub 
-    - export RELEASE_NAME="win-x64"
+    - export RELEASE_NAME="depcharge-win-x64"
     - zip -m $RELEASE_NAME.zip depcharge.exe
     - php /var/code/uploadBinary.php
   only:
     - tags
     - master
-
 
 
 pages:
