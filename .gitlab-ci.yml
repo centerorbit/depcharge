@@ -118,8 +118,9 @@ build-mac:
     paths:
       - depcharge-mac
   only:
-    - tags
+    - develop
     - master
+    - tags
 
 build-win:
   image: golang:1-alpine
@@ -139,8 +140,9 @@ build-win:
     paths:
       - depcharge.exe
   only:
-    - tags
+    - develop
     - master
+    - tags
 
 #build-docker:
 #  image: docker:latest
@@ -159,8 +161,9 @@ build-win:
 #
 #    - docker push $CI_REGISTRY_IMAGE:$IMAGE_NAME
 #  only:
-#    - tags
+#    - develop
 #    - master
+#    - tags
 
 release:
   image: registry.gitlab.com/centerorbit/release-github
@@ -204,8 +207,9 @@ release:
     - zip -m $RELEASE_NAME.zip depcharge.exe
     - php /var/code/uploadBinary.php
   only:
-    - tags
+    - develop
     - master
+    - tags
 
 
 pages:
@@ -220,4 +224,5 @@ pages:
     paths:
       - public
   only:
+    - develop
     - master
