@@ -45,7 +45,9 @@ func gitActionHandler(complete chan bool, deps []dep, perform perform) int {
 			there, _ := exists(dep.Location)
 			if !there {
 				if perform.DryRun {
-					fmt.Println("DryRun, would have performed a: `mkdir -p ", dep.Location, "`")
+					if perform.Verbose {
+						fmt.Println("DryRun, would have performed a: `mkdir -p ", dep.Location, "`")
+					}
 				} else {
 					// mkdir -p <location>
 					os.MkdirAll(dep.Location, os.ModePerm)

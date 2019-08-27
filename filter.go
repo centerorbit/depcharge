@@ -76,10 +76,15 @@ Splits comma separated
 */
 func applyFilterLabel(deps []dep, perform perform) []dep {
 	if perform.Labels == "" {
-		fmt.Println("Warning: No labels, using all deps of kind.")
+		if perform.Verbose || !perform.Force {
+			fmt.Println("Warning: No labels, using all deps of kind.")
+		}
 
-		if !perform.Force && !askForConfirmation("Are you sure you want to continue?", nil) {
-			fmt.Println("DepCharge cancelled.")
+		if !perform.Force && !askForConfirmation("Are you sure you want to continue?\n"+
+			"(use --force to suppress this prompt.)", nil) {
+			if perform.Verbose {
+				fmt.Println("DepCharge cancelled.")
+			}
 			os.Exit(0)
 		}
 		// If no labels, and only kind, return that.

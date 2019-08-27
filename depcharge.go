@@ -28,6 +28,7 @@ type perform struct {
 	Serial    bool
 	DryRun    bool
 	Force     bool
+	Verbose   bool
 }
 
 func main() {
@@ -74,5 +75,7 @@ func main() {
 		drainChannel(n, complete)
 	}
 
-	fmt.Println("depcharge complete!")
+	if perform.Verbose {
+		fmt.Println("depcharge complete!")
+	}
 }
