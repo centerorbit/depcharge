@@ -92,6 +92,9 @@ func processArgs() perform {
 	instead := ""
 	flaggy.String(&instead, "x", "instead", "Instead of 'kind', perform a different command.")
 
+	verbose := false
+	flaggy.Bool(&verbose, "v", "verbose", "Will print out additional information.")
+
 	flaggy.SetDescription(" a tool designed to help orchestrate the execution of commands across many directories at once.")
 
 	flaggy.DefaultParser.AdditionalHelpPrepend = "\n" +
@@ -135,6 +138,7 @@ func processArgs() perform {
 	perform.Serial = serial
 	perform.DryRun = dryRun
 	perform.Force = force
+	perform.Verbose = verbose
 
 	return perform
 }

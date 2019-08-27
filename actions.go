@@ -15,17 +15,19 @@ func defaultAction(complete chan<- bool, dep dep, perform perform) {
 
 	mustachedActionParams := templateParams(dep, perform)
 
-	if perform.DryRun {
+	if perform.DryRun && perform.Verbose {
 		fmt.Println("Dry run of: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
 	} else {
-		fmt.Println("Running: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
+		if perform.Verbose {
+			fmt.Println("Running: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
+		}
 		cmd := execCommand(perform.Kind, mustachedActionParams...)
 		cmd.Dir = dep.Location
 		//TODO: Find a way to "stream" output to terminal?
 		out, err := cmd.CombinedOutput()
 
 		command := perform.Kind + " " + strings.Join(mustachedActionParams, " ")
-		checkOkay(command, out, err) //Combines errors to output
+		checkOkay(command, out, err, perform.Verbose) //Combines errors to output
 		//out, err := cmd.Output() // just stdout
 	}
 
@@ -35,21 +37,27 @@ func defaultAction(complete chan<- bool, dep dep, perform perform) {
 /// ***  Helpers *** ///
 var checkOkayIntercept func(command string, out []byte, err error)
 
-func checkOkay(command string, out []byte, err error) {
+func checkOkay(command string, out []byte, err error, verbose bool) {
 	if checkOkayIntercept != nil {
 		checkOkayIntercept(command, out, err)
 		return
 	}
 
 	if err != nil {
-		fmt.Println("Command finished with error: ", err)
-		fmt.Println(command)
+		if verbose {
+			fmt.Println("Command finished with error: ", err)
+			fmt.Println(command)
+		} else {
+			fmt.Println(err)
+		}
 	}
 
 	if string(out) == "" {
-		fmt.Println("Done!")
+		if verbose {
+			fmt.Println("Done!")
+		}
 	} else {
-		fmt.Println(string(out))
+		fmt.Print(string(out))
 	}
 }
 
@@ -68,19 +76,19 @@ func templateParams(dep dep, perform perform) []string {
 		dep.Params["location"] = dep.Location
 	}
 
-	mustachedActionParams := applyMustache(dep.Params, perform.Action)
+	mustachedActionParams := applyMustache(dep.Params, perform.Action, perform.Verbose)
 
 	return mustachedActionParams
 }
 
-func applyMustache(params map[string]string, actionParams []string) []string {
+func applyMustache(params map[string]string, actionParams []string, verbose bool) []string {
 	var mustachedActionParams []string
 	mustache.AllowMissingVariables = false
 
 	for _, value := range actionParams {
 		data, err := mustache.Render(value, params)
 
-		if err != nil {
+		if err != nil && verbose {
 			fmt.Println("Warning: ", err)
 		}
 

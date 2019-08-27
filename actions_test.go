@@ -112,7 +112,7 @@ func TestApplyMustache(t *testing.T) {
 		"that is the {{answer}}.",
 	}
 
-	results := applyMustache(params, actionParams)
+	results := applyMustache(params, actionParams, true)
 
 	assert.Equal(t,
 		"To be, or not to be, that is the question.",
@@ -122,10 +122,10 @@ func TestApplyMustache(t *testing.T) {
 
 func TestCheckOkay(t *testing.T) {
 	err := errors.New("Fake error")
-	checkOkay("Not okay", nil, err)
+	checkOkay("Not okay", nil, err, true)
 
-	checkOkay("Is okay", nil, nil)
+	checkOkay("Is okay", nil, nil, true)
 
 	out := []byte("Here is a string....")
-	checkOkay("Is okay", out, nil)
+	checkOkay("Is okay", out, nil, true)
 }
