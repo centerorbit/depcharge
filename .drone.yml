@@ -1,17 +1,17 @@
 kind: pipeline
 name: default
 
+# TODO: Add caching
+# TODO: Add GitHub auto-release
+
 steps:
 - name: init
-  image: golang:1-alpine
+  image: golang:1-stretch
   commands:
-    - apk update && apk add git
-    - mkdir -p bin
-    - . ./scripts/set-env.sh
-
-    - go get ./...
+    - go install golang.org/x/lint/golint
+      # This build will trigger vgo to install all packages
     - go build -o depcharge
-    - ./depcharge -f -- go get {{get}}
+    - ./depcharge -h
 
     - export VERSION=$(echo $CI_COMMIT| cut -c1-7)
     - export VERSION=$(if [ -z $CI_TAG ]; then echo $VERSION ; else echo $CI_TAG.$VERSION; fi)
@@ -34,7 +34,7 @@ steps:
   image: golang:1-stretch
   commands:
     # Test for golint smells
-    - ./bin/golint -set_exit_status
+    - golint -set_exit_status
   depends_on:
     - init
 
@@ -56,7 +56,6 @@ steps:
     GOOS: "linux"
     GOARCH: "amd64"
   commands:
-    - . ./scripts/set-env.sh
     - export VERSION=$(cat VERSION.txt)
     - if [ -n "${CI_TAG-}" ]; then export EXTRA_FLAGS="-w -s"; fi
     - go build -ldflags="$EXTRA_FLAGS -X main.version=$VERSION" -o depcharge-linux .
@@ -73,7 +72,6 @@ steps:
     GOOS: "darwin"
     GOARCH: "amd64"
   commands:
-    - . ./scripts/set-env.sh
     - export VERSION=$(cat VERSION.txt)
     - if [ -n "${CI_TAG-}" ]; then export EXTRA_FLAGS="-w -s"; fi
     - go build -ldflags="$EXTRA_FLAGS -X main.version=$VERSION" -o depcharge-linux .
@@ -94,7 +92,6 @@ steps:
     GOOS: "windows"
     GOARCH: "amd64"
   commands:
-    - . ./scripts/set-env.sh
     - export VERSION=$(cat VERSION.txt)
     - if [ -n "${CI_TAG-}" ]; then export EXTRA_FLAGS="-w -s"; fi
     - go build -ldflags="$EXTRA_FLAGS -X main.version=$VERSION" -o depcharge-linux .

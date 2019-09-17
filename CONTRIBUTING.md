@@ -4,17 +4,7 @@
 
 ## Code Setup
 1. Clone repo
-1. `go get -t ./...`
-
-(-t includes test packages)
-
-
-If you cloned outside of your GOPATH, then you'll need to install packages "locally" to the project. Git is already configured to ignore these directories, because this is how the CI runs. To get up and going, run these commands first (assuming Linux or Mac):
-```
-export GOPATH=$(pwd)
-mkdir bin
-export GOBIN=$(pwd)/bin
-```
+1. Done! (DepCharge uses Go Modules, and so all dependencies will be installed automatically.)
 
 ## Formatting code
 
