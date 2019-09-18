@@ -47,7 +47,7 @@ func main() {
 	//dumpStruct(flattened)
 
 	// Step 1: We must flatten our YAML Struct, expanding location, and inheriting labels
-	expanded := unwrap(flattened, cwd, nil)
+	expanded := unwrap(flattened, cwd, nil, nil)
 
 	// Step 2: Now, lets filter out to only the kind that we want
 	kindFiltered := applyFilterKind(expanded, perform.Kind)

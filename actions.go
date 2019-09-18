@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/cbroglie/mustache"
+	"github.com/centerorbit/mustache"
 	"os/exec"
 	"strings"
 )
@@ -13,7 +13,7 @@ var execCommand = exec.Command
 
 func defaultAction(complete chan<- bool, dep dep, perform perform) {
 
-	mustachedActionParams := templateParams(dep, perform)
+	mustachedActionParams := applyMustache(dep.Params, perform.Action, perform.Verbose)
 
 	if perform.DryRun && perform.Verbose {
 		fmt.Println("Dry run of: `", perform.Kind, strings.Join(mustachedActionParams, " "), "` for: ", dep.Location)
@@ -61,31 +61,12 @@ func checkOkay(command string, out []byte, err error, verbose bool) {
 	}
 }
 
-func templateParams(dep dep, perform perform) []string {
-	// Adding kind, name, and location to possible template params
-	if dep.Params == nil {
-		dep.Params = map[string]string{}
-	}
-	if _, ok := dep.Params["kind"]; !ok {
-		dep.Params["kind"] = dep.Kind
-	}
-	if _, ok := dep.Params["name"]; !ok {
-		dep.Params["name"] = dep.Name
-	}
-	if _, ok := dep.Params["location"]; !ok {
-		dep.Params["location"] = dep.Location
-	}
-
-	mustachedActionParams := applyMustache(dep.Params, perform.Action, perform.Verbose)
-
-	return mustachedActionParams
-}
-
 func applyMustache(params map[string]string, actionParams []string, verbose bool) []string {
 	var mustachedActionParams []string
 	mustache.AllowMissingVariables = false
 
 	for _, value := range actionParams {
+
 		data, err := mustache.Render(value, params)
 
 		if err != nil && verbose {

@@ -70,9 +70,12 @@ func TestHelperProcess(t *testing.T) {
 func TestTemplateParams(t *testing.T) {
 
 	dep := dep{
-		Kind:     "git",
-		Name:     "depcharge",
-		Location: "./",
+		Params: map[string]string{
+			"kind":     "git",
+			"name":     "depcharge",
+			"location": "./",
+			"answer":   "question",
+		},
 	}
 
 	perform := perform{
@@ -83,17 +86,7 @@ func TestTemplateParams(t *testing.T) {
 		},
 	}
 
-	results := templateParams(dep, perform)
-	assert.Equal(t,
-		"To git, or depcharge, that is the ",
-		strings.Join(results, " "))
-
-	dep.Params = map[string]string{
-		"is":     "be",
-		"is not": "not to be",
-		"answer": "question",
-	}
-	results = templateParams(dep, perform)
+	results := applyMustache(dep.Params, perform.Action, false)
 	assert.Equal(t,
 		"To git, or depcharge, that is the question.",
 		strings.Join(results, " "))

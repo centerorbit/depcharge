@@ -13,7 +13,7 @@ func TestUnwrap(t *testing.T) {
 	var foundDeps []dep
 
 	// Test if nothing is okay
-	foundDeps = unwrap(deps, "", labels)
+	foundDeps = unwrap(deps, "", labels, nil)
 	assert.Empty(t, foundDeps)
 
 	testDep := dep{
@@ -27,7 +27,8 @@ func TestUnwrap(t *testing.T) {
 
 	// Tests single-level dep
 	deps = append(deps, testDep)
-	foundDeps = unwrap(deps, "./", labels)
+	deps[0].Params = map[string]string{"kind": testDep.Kind, "location": testDep.Location, "name": testDep.Name}
+	foundDeps = unwrap(deps, "./", labels, nil)
 	assert.Equal(t, deps, foundDeps)
 
 	//Making a nest
@@ -60,7 +61,7 @@ func TestUnwrap(t *testing.T) {
 
 	deps = append(deps, testDep)
 
-	foundDeps = unwrap(deps, "./append/", labels)
+	foundDeps = unwrap(deps, "./append/", labels, nil)
 
 	// Test flattening of deps:
 	assert.Equal(t, 5, len(foundDeps))
