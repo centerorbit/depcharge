@@ -106,8 +106,7 @@ func processArgs() perform {
 	action := flaggy.TrailingArguments
 
 	if exclusive && inclusive {
-		fmt.Println("--exclusive and --inclusive cannot be specified at the same time.")
-		os.Exit(-1)
+		flaggy.ShowHelpAndExit("--exclusive and --inclusive cannot be specified at the same time.")
 	}
 
 	exclusive = !inclusive
