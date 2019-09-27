@@ -3,7 +3,7 @@ module github.com/centerorbit/depcharge
 go 1.12
 
 require (
-	github.com/cbroglie/mustache v1.0.1
+	github.com/centerorbit/mustache v1.0.2
 	github.com/ghodss/yaml v1.0.0
 	github.com/integrii/flaggy v1.2.2
 	github.com/stretchr/testify v1.4.0

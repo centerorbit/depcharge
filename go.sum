@@ -1,5 +1,6 @@
-github.com/cbroglie/mustache v1.0.1 h1:ivMg8MguXq/rrz2eu3tw6g3b16+PQhoTn6EZAhst2mw=
-github.com/cbroglie/mustache v1.0.1/go.mod h1:R/RUa+SobQ14qkP4jtx5Vke5sDytONDQXNLPY/PO69g=
+github.com/centerorbit/mustache v1.0.1/go.mod h1:dyt23O6PgprM6X8Mq7QP7tl//fxMnQit0jqKDOnvdsk=
+github.com/centerorbit/mustache v1.0.2 h1:ZEb2nmQqKGRB+QBw53LdlIy27dhUpnrDvNUuR5Y/8uk=
+github.com/centerorbit/mustache v1.0.2/go.mod h1:dyt23O6PgprM6X8Mq7QP7tl//fxMnQit0jqKDOnvdsk=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=

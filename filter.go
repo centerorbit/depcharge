@@ -40,13 +40,29 @@ Flattens the dep YAML
 	dep.Labels are inherited
 	dep.Location is expanded
 */
-func unwrap(deps []dep, baseDir string, labels []string) []dep {
+func unwrap(deps []dep, baseDir string, labels []string, params map[string]string) []dep {
 	var foundDeps []dep
 	for _, dep := range deps {
 		dep.Location = filepath.Clean(baseDir + dep.Location)
 		dep.Labels = append(dep.Labels, labels...) // Inherit labels
+
+		// Adding kind, name, and location to possible template params
+		if dep.Params == nil {
+			dep.Params = map[string]string{}
+		}
+		if _, ok := dep.Params["kind"]; !ok {
+			dep.Params["kind"] = dep.Kind
+		}
+		if _, ok := dep.Params["name"]; !ok {
+			dep.Params["name"] = dep.Name
+		}
+		if _, ok := dep.Params["location"]; !ok {
+			dep.Params["location"] = dep.Location
+		}
+
+		dep.Params = mergeMap(dep.Params, params) // Inherit parents Params
 		if dep.DepList != nil {
-			foundDeps = append(foundDeps, unwrap(dep.DepList, dep.Location+"/", dep.Labels)...)
+			foundDeps = append(foundDeps, unwrap(dep.DepList, dep.Location+string(os.PathSeparator), dep.Labels, parentParms(dep.Params))...)
 			dep.DepList = nil
 		}
 
@@ -54,6 +70,31 @@ func unwrap(deps []dep, baseDir string, labels []string) []dep {
 	}
 
 	return foundDeps
+}
+
+/*
+In mustache.go the `func lookup()` attempts to expand dot notation, so I forked that codebase
+and commented that out to allow directory style parental param lookups.
+*/
+func parentParms(params map[string]string) map[string]string {
+	parents := make(map[string]string)
+	for name, param := range params {
+		parents[".."+string(os.PathSeparator)+name] = param
+	}
+
+	return parents
+}
+
+/**
+Merge the parent map with the sibling, but allow sibling to take precedence if there are dupes.
+*/
+func mergeMap(sibling map[string]string, parent map[string]string) map[string]string {
+	for name, param := range parent {
+		if _, ok := sibling[name]; !ok {
+			sibling[name] = param
+		}
+	}
+	return sibling
 }
 
 /**
