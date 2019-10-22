@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/centerorbit/mustache"
+	"io"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -23,43 +25,34 @@ func defaultAction(complete chan<- bool, dep dep, perform perform) {
 		}
 		cmd := execCommand(perform.Kind, mustachedActionParams...)
 		cmd.Dir = dep.Location
-		//TODO: Find a way to "stream" output to terminal?
-		out, err := cmd.CombinedOutput()
 
-		command := perform.Kind + " " + strings.Join(mustachedActionParams, " ")
-		checkOkay(command, out, err, perform.Verbose) //Combines errors to output
-		//out, err := cmd.Output() // just stdout
+		stdout, _ := cmd.StdoutPipe()
+		stderr, _ := cmd.StderrPipe()
+
+		err := cmd.Start()
+		if err != nil {
+			if perform.Verbose {
+				fmt.Println("Couldn't start command: ", perform.Kind+" "+strings.Join(mustachedActionParams, " "))
+				fmt.Println("Due to this error:", err)
+			}
+		} else {
+			go func() { _, _ = io.Copy(os.Stdout, stdout) }()
+			go func() { _, _ = io.Copy(os.Stderr, stderr) }()
+			err = cmd.Wait()
+
+			if err != nil {
+				if perform.Verbose {
+					fmt.Println("Command finished with error: ", err)
+					fmt.Println(perform.Kind + " " + strings.Join(mustachedActionParams, " "))
+				}
+			}
+		}
 	}
 
 	complete <- true
 }
 
 /// ***  Helpers *** ///
-var checkOkayIntercept func(command string, out []byte, err error)
-
-func checkOkay(command string, out []byte, err error, verbose bool) {
-	if checkOkayIntercept != nil {
-		checkOkayIntercept(command, out, err)
-		return
-	}
-
-	if err != nil {
-		if verbose {
-			fmt.Println("Command finished with error: ", err)
-			fmt.Println(command)
-		} else {
-			fmt.Println(err)
-		}
-	}
-
-	if string(out) == "" {
-		if verbose {
-			fmt.Println("Done!")
-		}
-	} else {
-		fmt.Print(string(out))
-	}
-}
 
 func applyMustache(params map[string]string, actionParams []string, verbose bool) []string {
 	var mustachedActionParams []string

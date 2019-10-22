@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -26,15 +25,7 @@ func TestDefaultAction(t *testing.T) {
 	execCommand = fakeExecCommand
 	defer func() {
 		execCommand = exec.Command
-		checkOkayIntercept = nil
 	}()
-
-	checkOkayIntercept = func(command string, out []byte, err error) {
-		assert.Equal(t, "git status", command)
-		assert.Nil(t, err)
-		fmt.Println(string(out))
-		assert.Equal(t, "TestHelperProcess, intercepting exec.Command", string(out))
-	}
 
 	complete := make(chan bool, 1)
 
@@ -111,14 +102,4 @@ func TestApplyMustache(t *testing.T) {
 		"To be, or not to be, that is the question.",
 		strings.Join(results, " "))
 
-}
-
-func TestCheckOkay(t *testing.T) {
-	err := errors.New("Fake error")
-	checkOkay("Not okay", nil, err, true)
-
-	checkOkay("Is okay", nil, nil, true)
-
-	out := []byte("Here is a string....")
-	checkOkay("Is okay", out, nil, true)
 }
